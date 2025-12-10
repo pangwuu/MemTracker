@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../supabaseClient.js'
+import { supabase } from '../supabaseClient'
 
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
@@ -9,6 +9,8 @@ export default function AccountView({session}) {
     const [loading, setLoading] = useState(true)
     const [bio, setBio] = useState('')
     const [tempBio, setTempBio] = useState('')
+
+    const email = session['user']['email'];
 
     useEffect(() => {
         let ignore = false;
@@ -29,7 +31,10 @@ export default function AccountView({session}) {
                     console.warn(error)
                 } else if (data) {
                     setBio(data.bio)
-                }                
+                    // setEmail(userEmail);     
+                    // console.log('Users email: ' + userEmail)                     
+                }          
+
 
             setLoading(false);
 
@@ -66,15 +71,23 @@ export default function AccountView({session}) {
         setLoading(false)
     }
 
+    async function signOut() {
+        const { error } = await supabase.auth.signOut()
+        if (error) {
+            alert(error.message)
+        }
+    }
+
     function currentBio() {
         // Component that displays the bio of the user conditionally
+
         if (bio === '' || loading) {
-            return <h1>No bio yet! Maybe set one up!</h1>
+            return <h1>No bio yet! Maybe set one up! {email}</h1>
         }
         else {
             return <Stack>
                 <h1>Bio</h1>
-                <p>{bio}</p>
+                <p>{email} {bio}</p>
             </Stack>
         }
 
@@ -102,5 +115,12 @@ export default function AccountView({session}) {
     return <Stack>
         {currentBio()}
         {updateBioComps()}
+        <Button
+        color='error'
+        onClick={() => {
+            signOut();
+        }}>
+            Logout
+        </Button>
     </Stack>
 }

@@ -1,5 +1,8 @@
+import MapEmbed from "../components/MapEmbed";
 
 
 export default function MapView() {
-    return <text>This is a map</text>
+
+    
+    return <MapEmbed position={[50, 100]}></MapEmbed>
 }
