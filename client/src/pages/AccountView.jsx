@@ -4,6 +4,7 @@ import { supabase } from '../supabaseClient'
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 export default function AccountView({session}) {
     const [loading, setLoading] = useState(true)
@@ -82,12 +83,19 @@ export default function AccountView({session}) {
         // Component that displays the bio of the user conditionally
 
         if (bio === '' || loading) {
-            return <h1>No bio yet! Maybe set one up! {email}</h1>
+            return <Stack spacing={2}>
+                <Typography variant='h1'>Your account</Typography>
+                <Typography variant='body1'>Logged in as: {email}</Typography>
+                <Typography variant='h2'>You haven't set up a bio yet! Maybe go and create one!</Typography>
+            </Stack>
+            
         }
         else {
-            return <Stack>
-                <h1>Bio</h1>
-                <p>{email} {bio}</p>
+            return <Stack spacing={2}>
+                <Typography variant='h1'>Your account</Typography>
+                <Typography variant='body1'>Logged in as: {email}</Typography>
+                <Typography variant='h2'>Your bio:</Typography>
+                <Typography variant='body1'>{bio}</Typography>
             </Stack>
         }
 
