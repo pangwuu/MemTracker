@@ -5,6 +5,12 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box'
+import styles from '../styles/AccountView.module.css'
+import Grid from '@mui/material/Grid'
+
+import UpdateIcon from '@mui/icons-material/Update';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 export default function AccountView({session}) {
     const [loading, setLoading] = useState(true)
@@ -82,53 +88,80 @@ export default function AccountView({session}) {
     function currentBio() {
         // Component that displays the bio of the user conditionally
 
-        if (bio === '' || loading) {
-            return <Stack spacing={2}>
-                <Typography variant='h1'>Your account</Typography>
+        var text = null
+        if (loading) {
+            text = <Stack spacing={2} paddingTop={3}>
+                <Typography variant='h3'>Your account</Typography>
                 <Typography variant='body1'>Logged in as: {email}</Typography>
-                <Typography variant='h2'>You haven't set up a bio yet! Maybe go and create one!</Typography>
+                <Typography variant='h4'>Loading your bio... please wait</Typography>
+            </Stack>
+        }
+        else if (bio === '') {
+            text = <Stack spacing={2} paddingTop={3}>
+                <Typography variant='h3'>Your account</Typography>
+                <Typography variant='body1'>Logged in as: {email}</Typography>
+                <Typography variant='h4'>You haven't set up a bio yet! Maybe go and create one!</Typography>
             </Stack>
             
         }
         else {
-            return <Stack spacing={2}>
-                <Typography variant='h1'>Your account</Typography>
+            text = <Stack spacing={2} paddingTop={3}>
+            <Typography variant='h3'>Your account</Typography>
                 <Typography variant='body1'>Logged in as: {email}</Typography>
-                <Typography variant='h2'>Your bio:</Typography>
+                <Typography variant='h5'>Your bio:</Typography>
                 <Typography variant='body1'>{bio}</Typography>
             </Stack>
         }
 
+        return text
+
     }
 
     function updateBioComps() {
-        return <Stack>
-            <TextField
+        return <Stack spacing={2}>
+                <TextField
                 label="New bio"
                 multiline
-                maxRows={4}
+                minRows={4}
+                maxRows={6}
                 value={tempBio}
                 onChange={(e) => {setTempBio(e.target.value)}}
-            />
-            <Button
-                onClick={() => {updateProfile(tempBio)
-                    setBio(tempBio);
-                }}
-                disabled={loading}>
-                    Confirm and update
-                </Button>
-        </Stack>
+                />
+                <Box className={styles.box}>
+                    <Button
+                    onClick={() => {updateProfile(tempBio)
+                        setBio(tempBio);
+                    }}
+                    startIcon={<UpdateIcon></UpdateIcon>}
+                    disabled={loading}>
+                        Confirm and update
+                    </Button> 
+                </Box>
+
+                
+                </Stack>
+
     }
 
-    return <Stack>
+    return <Stack spacing={2}>
         {currentBio()}
         {updateBioComps()}
-        <Button
-        color='error'
-        onClick={() => {
-            signOut();
-        }}>
-            Logout
-        </Button>
-    </Stack>
+        
+        <Box className={styles.box}>
+            <Button
+            color='error'
+            onClick={() => {
+                signOut();
+            }}
+            startIcon={<LogoutIcon></LogoutIcon>}>
+                Logout
+            </Button>
+        </Box>
+
+
+        
+        </Stack>
+    
+    
+
 }

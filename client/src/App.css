@@ -35,3 +35,14 @@
   display: flex;
   justify-content: center;
 }
+
+.box {
+  min-height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.big-stack {
+  padding-top: 5%;
+}
