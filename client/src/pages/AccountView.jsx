@@ -12,6 +12,8 @@ import Paper from '@mui/material/Paper'
 import UpdateIcon from '@mui/icons-material/Update';
 import LogoutIcon from '@mui/icons-material/Logout';
 
+import FullscreenToggleComponent from './FullScreen';
+
 export default function AccountView({session}) {
     const [loading, setLoading] = useState(true)
     const [bio, setBio] = useState('')
@@ -149,6 +151,8 @@ export default function AccountView({session}) {
                     </Paper>
 
                 </Box>
+
+                <FullscreenToggleComponent></FullscreenToggleComponent>
 
                 
                 </Stack>

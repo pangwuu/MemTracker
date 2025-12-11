@@ -31,7 +31,7 @@
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "dev": "concurrently \"vite\" \"cd .. && python3 api/app.py\""
+    "dev": "vite --host"
   },
   "browserslist": {
     "production": [

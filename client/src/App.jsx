@@ -4,7 +4,7 @@ import LoginPage from './pages/LoginPage';
 import MapView from './pages/MapView';
 import MemoryCardPage from './pages/MemoryCardPage'
 import AccountView from './pages/AccountView';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { supabase } from './supabaseClient'
 import {Views} from './consts.ts'
@@ -33,6 +33,8 @@ function App() {
   // const [isCardView, setIsCardView] = useState(Views.User);
   const [currentView, setCurrentView] = useState(Views.User);
   const [session, setSession] = useState(null);
+  const [memories, setMemories] = useState([]);
+  const [loadingMemories, setLoadingMemories] = useState(false);
   
   function handleView(newView) {
     setCurrentView(newView);
@@ -45,23 +47,59 @@ function App() {
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
+    
   }, [])  
 
-function renderContent() {
-    if (!session) return <LoginPage />;
-    
-    // Switch logic only handles the SPECIFIC page content now
-    switch (currentView) {
-      case Views.User:
-        return <AccountView session={session} />;
-      case Views.Map:
-        return <MapView />;
-      case Views.Memory:
-        return <MemoryCardPage session={session} />;
-      default:
-        return <div>Sorry! This website doesn't exist.</div>;
-    }
-  }
+    // get all the data for this user so it can be shared across all components. Wrapping it in a useCallback allows any results to be cached (i.e you dont rerun this each frame you just retrieve the cached value!)
+    const getMemories = useCallback(async () => {
+        if (!session) {
+          return;
+        }
+        setLoadingMemories(true)
+
+        const {user} = session
+        
+        const {data, error} = await supabase.from('memories')
+        .select(`title, description, memory_date, location, image_urls, location_plain_string`).eq('user_id', user.id)
+
+        if (error) {
+            alert(error)
+        }
+
+        // console.log(data);
+        // let i = 0;
+        // for (i = 0; i < data.length; i++) {
+        //     console.log(data[i].title)
+        //     console.log(data[i].description)
+        //     console.log(data[i].memory_date)
+        //     console.log(data[i].location)
+        //     console.log(data[i].image_urls)
+        // }
+
+        setLoadingMemories(false)
+        setMemories(data);
+
+    }, [session])
+
+    useEffect(() => {
+      getMemories()
+    }, [getMemories])
+
+    function renderContent() {
+        if (!session) return <LoginPage />;
+        
+        // Switch logic only handles the SPECIFIC page content now
+        switch (currentView) {
+          case Views.User:
+            return <AccountView session={session} />;
+          case Views.Map:
+            return <MapView />;
+          case Views.Memory:
+            return <MemoryCardPage memories={memories} setMemories={() => {setMemories}} session={session} />;
+          default:
+            return <div>Sorry! This website doesn't exist.</div>;
+        }
+      }
 
   return <ThemeProvider
   theme={theme}>

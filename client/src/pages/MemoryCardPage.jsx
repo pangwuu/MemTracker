@@ -1,38 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import AddMemory from './AddMemory';
+import Stack from '@mui/material/Stack';
 
 import { supabase } from '../supabaseClient'
+import MemoryCard from '../components/MemoryCard';
 
-export default function MemoryCardPage({session}) {
+export default function MemoryCardPage({memories, setMemories, session}) {
     // shows all memory cards
 
-    const [testMemory, setTestMemory] = useState(null);
-    const [testMemoryError, setTestMemoryError] = useState(null);
-    const [loadingMemories, setLoadingMemories] = useState(false);
+    return <Stack spacing={2}>
+        <MemoryCard isLoading={false} memory={memories[0]} session={session}></MemoryCard>
 
-    // get all the data for this user.
-    useEffect(() => {
-        
-        async function getMemories() {
-            setLoadingMemories(true)
+        <AddMemory session={session}></AddMemory>
 
-            const {user} = session
-            
-            const {data, error} = await supabase.from('memories')
-            .select(`title, description, memory_date, location, image_urls`).eq('user_id', user.id)
+    </Stack>
 
-            if (error) {
-                alert(error)
-            }
+    
 
-            console.log(data);
-
-            setLoadingMemories(false)
-        }
-
-        getMemories()
-    }, [])
-
-    return <AddMemory session={session}></AddMemory>
     
 }

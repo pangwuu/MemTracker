@@ -162,7 +162,7 @@ export default function AddMemory({session}) {
                 .from('memory-images')
                 .getPublicUrl(filePath);
 
-            uploadedUrls.push(urlData.publicUrl);
+            uploadedUrls.push(filePath);
 
         }
 
@@ -187,6 +187,7 @@ export default function AddMemory({session}) {
             title: memTitle,
             description: memDesc,
             memory_date: memDate.format('YYYY-MM-DD'),
+            location_plain_string: locationValue,
             location: `POINT(${selectedLong} ${selectedLat})`, 
             image_urls: imageUrls
 
