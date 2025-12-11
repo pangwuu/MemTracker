@@ -134,14 +134,14 @@ export default function AccountView({session}) {
                     onClick={() => {updateProfile(tempBio)
                         setBio(tempBio);
                     }}
-                                    sx={{
-                transition: 'transform 0.3s ease-in-out',
-                '&:hover': {
-                    transform: 'scale(1.02)',
-                },
-                paddingLeft: '2vh',
-                paddingRight: '2vh'
-                }}
+                    sx={{
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': {
+                        transform: 'scale(1.02)',
+                    },
+                    paddingLeft: '2vh',
+                    paddingRight: '2vh'
+                    }}
                     startIcon={<UpdateIcon></UpdateIcon>}
                     disabled={loading}>
                         Confirm and update

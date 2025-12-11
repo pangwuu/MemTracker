@@ -1,17 +1,12 @@
 import { useState, useEffect } from 'react';
 import Stack from '@mui/material/Stack';
-import MapEmbed from '../components/MapEmbed';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import Container from '@mui/material/Container';
 import UploadAndDisplayImages from '../components/UploadAndDisplayImages';
 import LocationTextField from '../components/LocationTextField';
-// import TitleText from '../components/TitleText';
 
 export default function AddMemory() {
 
@@ -20,6 +15,56 @@ export default function AddMemory() {
     const [memDate, setMemDate] = useState(null);
 
     const [selectedImages, setSelectedImages] = useState([]);
+    const [userInput, setUserInput] = useState('');
+    const [returnedResults, setReturnedResults] = useState([])
+    const [locationValue, setLocationValue] = useState(null);
+    const [autocompleteLoading, setAutocompleteLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [selectedLat, setSelectedLat] = useState(null);
+    const [selectedLong, setSelectedLong] = useState(null);
+
+    // used to autofill the text field and get user to select
+    useEffect(() => {
+
+        const timeoutId = setTimeout(() => {
+            const fetchPlaces = async () => {
+                if (userInput.length <= 3) {
+                    return;
+                }
+                console.log('here!')
+                const searchLink = `https://nominatim.openstreetmap.org/search?q=${userInput}, Australia&format=jsonv2`
+                
+                var result = []
+
+                try {
+                    setAutocompleteLoading(true);
+                    const response = await fetch(searchLink, {
+                        headers: {
+                            'User-Agent': 'MemoryWebsite'
+                        }
+                    });
+                    if (!response.ok) {
+                        throw new Error(`autocomplete error! status ${response.status}`)
+                    }
+                    
+                    result = await response.json()
+                } catch (error) {
+                    setError(error);
+                } finally {
+                    setReturnedResults(result.slice(0, 5))
+                    setAutocompleteLoading(false)
+                }
+            }
+
+            fetchPlaces();
+
+        }, 200)
+        
+        return () => clearTimeout(timeoutId)
+
+    }, [userInput])
+
+
 
     const updateImages = (newImage) => {
 
@@ -98,7 +143,22 @@ export default function AddMemory() {
             onClear={clearImages}
         />
 
-        <LocationTextField></LocationTextField>
-        {/* <MapEmbed position={[0, 0]}></MapEmbed> */}
+        <LocationTextField
+        userInput={userInput}
+        setUserInput={setUserInput}
+        returnedResults={returnedResults}
+        setReturnedResults={setReturnedResults}
+        locationValue={locationValue}
+        setLocationValue={setLocationValue}
+        autocompleteLoading={autocompleteLoading}
+        setAutocompleteLoading={setAutocompleteLoading}
+        error={error}
+        setError={setError}
+        selectedLat={selectedLat}
+        setSelectedLat={setSelectedLat}
+        selectedLong={selectedLong}
+        setSelectedLong={setSelectedLong}
+        />
+
     </Stack>
 }
