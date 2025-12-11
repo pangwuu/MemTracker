@@ -73,7 +73,6 @@ export default function AddMemory({session}) {
 
     }, [locationInput])
 
-
     const updateImages = (newImage) => {
 
         if (!newImage) {

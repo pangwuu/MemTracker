@@ -1,14 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import AddMemory from './AddMemory';
 
+import { supabase } from '../supabaseClient'
+
 export default function MemoryCardPage({session}) {
     // shows all memory cards
-    // // Add a bunch of sample data's (simple CRUD application)
-    // // what does a memory have?
-    // // date, location, name, one thing you like about it
 
     const [testMemory, setTestMemory] = useState(null);
     const [testMemoryError, setTestMemoryError] = useState(null);
+    const [loadingMemories, setLoadingMemories] = useState(false);
+
+    // get all the data for this user.
+    useEffect(() => {
+        
+        async function getMemories() {
+            setLoadingMemories(true)
+
+            const {user} = session
+            
+            const {data, error} = await supabase.from('memories')
+            .select(`title, description, memory_date, location, image_urls`).eq('user_id', user.id)
+
+            if (error) {
+                alert(error)
+            }
+
+            console.log(data);
+
+            setLoadingMemories(false)
+        }
+
+        getMemories()
+    }, [])
 
     return <AddMemory session={session}></AddMemory>
     

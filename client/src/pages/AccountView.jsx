@@ -39,8 +39,7 @@ export default function AccountView({session}) {
                     console.warn(error)
                 } else if (data) {
                     setBio(data.bio)
-                    // setEmail(userEmail);     
-                    // console.log('Users email: ' + userEmail)                     
+                
                 }          
 
 
