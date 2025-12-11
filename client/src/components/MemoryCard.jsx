@@ -1,6 +1,8 @@
 // a small memory card to be displayed as a grid on the page
 import { useState, useEffect, memo } from 'react';
 import Card from '@mui/material/Card';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import CardActions from '@mui/material/CardActions';
@@ -25,6 +27,7 @@ export default function MemoryCard({isLoading, memory, session}) {
 
         let active = true;
 
+        // ensures the path we use to download the file is correct - there's a lot of subfolders and we need to clean it up
         const getCleanPath = (path) => {
                         
             const parts = path.split('/memory-images/');
@@ -38,7 +41,8 @@ export default function MemoryCard({isLoading, memory, session}) {
         };
 
         const cleanPath = getCleanPath(imagePath);
-
+        
+        // this is how we download an image
         async function downloadImage() {
             console.log('trying to get the image')
             const { data, error } = await supabase.storage
@@ -62,21 +66,33 @@ export default function MemoryCard({isLoading, memory, session}) {
         };        
 
     }, [imagePath]); 
+    
+    const getCleanDate = (oldDate) => {
+        const dateObj = new Date(oldDate)
+        const formattedDateSlash = dateObj.toLocaleDateString('en-AU');   
+        return formattedDateSlash.replace('-', '/');  
+    }
 
-    return <>
-    {!isLoading && memory && <Card>
+    return <Box width={'100%'} sx={{
+        ':hover': {
+          transition: 'transform 0.4s ease;',
+          transform: 'scale(1.01)'
+        }
+        }}>
+        {!isLoading && memory && <Card>
         <CardActionArea>
             <CardMedia
             component="img"
             image={imageUrl}
             >
             </CardMedia>
+            <Divider/>
             <CardContent>
                 <Typography variant="h5">
                 {memory.title}
                 </Typography>
                 <Typography variant="body1">
-                {memory.memory_date}
+                {getCleanDate(memory.memory_date)}
                 </Typography>
                 <Typography variant="body1">
                 {memory.location_plain_string}
@@ -86,6 +102,6 @@ export default function MemoryCard({isLoading, memory, session}) {
 
     </Card>}
     {isLoading || !memory && <Skeleton variant="rectangular"/>}    
-    </>
+    </Box>
 
 }
