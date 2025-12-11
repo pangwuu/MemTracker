@@ -5,20 +5,34 @@
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import Typography from "@mui/material/Typography";
+import Card from '@mui/material/Card'
+import Box from '@mui/material/Box'
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Paper from '@mui/material/Paper';
 
 export default function UploadAndDisplayImages({images, onImageUpload, onClear}) {
 
   // Return the JSX for rendering
   return (<Stack spacing={2}>
+
+    <Box alignSelf={'center'}>
+        <Card variant='outlined'>
             <Button 
                 component="label"
                 startIcon={<CloudUploadIcon />}
                 height={5}
+                sx={{
+                transition: 'transform 0.3s ease-in-out',
+                '&:hover': {
+                    transform: 'scale(1.02)',
+                },
+                paddingLeft: '2vh',
+                paddingRight: '2vh'
+                }}
                 >
                 Upload images of your memory
                 <input
@@ -31,43 +45,72 @@ export default function UploadAndDisplayImages({images, onImageUpload, onClear})
                     }}
                 />
             </Button>
+        </Card>
+    </Box>
         
           {
             (images.length !== 0) && 
             <Stack>
             
-            <Typography
-            variant="h5">
-                Your memory images!
-            </Typography>
+            <Box alignSelf={'center'}>
+                <Typography variant="h5">
+                    Your memory images!
+                </Typography>
+            </Box>
 
             <ImageList 
                 sx={{ 
                 width: '100%',
                 height: 'auto',
-                maxHeight: '80vh',
-                overflowY: 'auto'
+                maxHeight: 'auto',
+                overflowY: 'auto',
+                padding: '2vh'
             }} 
             cols={3}
-            gap={10}>
+            gap={20}
+            >
 
             {images.map((item, index) => (
-                <ImageListItem key={index}>
-                <img
-                    src={item.url}
-                    alt={item.name}
-                    loading="lazy"
-                    style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                />
-                </ImageListItem>
+                <Card elevation={5}
+                sx={{
+                transition: 'transform 0.3s ease-in-out',
+                '&:hover': {
+                    transform: 'scale(1.02)',
+                },
+                }}
+                >
+                    <ImageListItem key={index} >
+                    <img
+                        src={item.url}
+                        alt={item.name}
+                        loading="lazy"
+                        style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                    />
+                    </ImageListItem>
+                </Card>
+
             ))}
-            </ImageList>          
-            <Button
-            color="error"
-            startIcon= {<DeleteIcon/>}
-            onClick={onClear}
-            >Clear all images
-            </Button>
+            </ImageList> 
+
+            <Box alignSelf={'center'}>
+                <Card variant='outlined'>
+                    <Button
+                    color="error"
+                    startIcon= {<DeleteIcon/>}
+                    onClick={onClear}
+                    sx={{
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': {
+                        transform: 'scale(1.02)',
+                    },
+                    paddingLeft: '2vh',
+                    paddingRight: '2vh'
+                    }}
+                    >Clear all images
+                    </Button>
+                </Card>
+            </Box>         
+
                 </Stack>                 
           }
       

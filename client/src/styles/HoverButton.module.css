@@ -1,0 +1,9 @@
+.hover-button {
+  transition: transform 0.3s ease-in-out;
+  padding-left: 2vh;
+  padding-right: 2vh;
+}
+
+.hover-button:hover {
+  transform: scale(1.02);
+}

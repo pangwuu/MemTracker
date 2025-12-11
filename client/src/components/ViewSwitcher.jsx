@@ -6,33 +6,34 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import {Views} from '../consts.ts'
 
-export default function ViewSwitcher({onSwitchView}) {
-  const [view, setView] = React.useState(Views.User);
+export default function ViewSwitcher({currentView, onSwitchView}) {
 
-  function changeView(newView) {
-    onSwitchView(newView);
+  const handleView = (event, newView) => {
+    if (newView !== null) {
+      onSwitchView(newView);
+    }
   }
 
   return (
     <ToggleButtonGroup
-      value={view}
+      value={currentView}
       exclusive
-      onChange={(event, newView) => setView(newView)}
+      onChange={handleView}
       aria-label="page view"
       sx={{
-        position: 'fixed',
-        top: 0,
-        right: 0,
-        padding: '3%', 
+        backgroundColor: 'background.paper', 
+        borderRadius: 1
       }}
+      size='small'
+      color='secondary'
     >
-      <ToggleButton value={Views.User} aria-label={Views.User} onClick={() => changeView(Views.User)}>
+      <ToggleButton value={Views.User} aria-label={Views.User}>
         <PersonIcon />
       </ToggleButton>
-      <ToggleButton value={Views.Memory} aria-label={Views.Memory} onClick={() => changeView(Views.Memory)}>
+      <ToggleButton value={Views.Memory} aria-label={Views.Memory}>
         <CollectionsIcon />
       </ToggleButton>
-      <ToggleButton value={Views.Map} aria-label={Views.Map} onClick={() => changeView(Views.Map)}>
+      <ToggleButton value={Views.Map} aria-label={Views.Map}>
         <MapIcon />
       </ToggleButton>
     </ToggleButtonGroup>

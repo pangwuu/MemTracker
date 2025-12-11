@@ -12,8 +12,12 @@ import Container from '@mui/material/Container';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import CssBaseline from '@mui/material/CssBaseline'; // For consistent styling
-
+import CssBaseline from '@mui/material/CssBaseline';
+import Toolbar from '@mui/material/Toolbar';
+import AppBar from '@mui/material/AppBar';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
 
 // Define your custom font family
 const customFont = "'Roboto', sans-serif"; // Replace 'Roboto' with your chosen font
@@ -26,11 +30,12 @@ const theme = createTheme({
 
 function App() {
 
-  const [isCardView, setIsCardView] = useState(Views.User);
+  // const [isCardView, setIsCardView] = useState(Views.User);
+  const [currentView, setCurrentView] = useState(Views.User);
   const [session, setSession] = useState(null);
   
-  function handleCardView(newView) {
-    setIsCardView(newView);
+  function handleView(newView) {
+    setCurrentView(newView);
   }
   
   useEffect(() => {
@@ -46,7 +51,7 @@ function renderContent() {
     if (!session) return <LoginPage />;
     
     // Switch logic only handles the SPECIFIC page content now
-    switch (isCardView) {
+    switch (currentView) {
       case Views.User:
         return <AccountView session={session} />;
       case Views.Map:
@@ -60,22 +65,38 @@ function renderContent() {
 
   return <ThemeProvider
   theme={theme}>
-<CssBaseline /> 
-      
-      {/* LAYOUT TIP: 
-         If you want 'ViewSwitcher' and 'Container' on every page, 
-         put them here once instead of repeating them 3 times!
-      */}
-      {session && (
+    <CssBaseline /> 
+      {session && (<Stack>
+        
+        <AppBar position='static'
+        color='inherit'
+        sx={{
+          boxShadow: '1'
+        }}>
+          <Toolbar>
+            <Box>
+              <Typography variant='h5'>Memory tracker</Typography>
+            </Box>
+            <Box sx={{ flexGrow: 1 }} />
+            <Box>
+              <ViewSwitcher
+              onSwitchView={handleView}
+              currentView={currentView}
+              />
+            </Box>
+          </Toolbar>
+        </AppBar>       
+        
+ 
         <Container>
-           <ViewSwitcher onSwitchView={handleCardView} />
-           {renderContent()}
+          {renderContent()}
         </Container>
+      </Stack>
+
       )}
       
-      {/* If not logged in, just show login page without container/switcher */}
       {!session && <LoginPage />}
-  </ThemeProvider>
+      </ThemeProvider>
   
 }
 

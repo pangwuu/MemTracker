@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react';
 import Stack from '@mui/material/Stack';
-
-import UploadAndDisplayImage from '../components/UploadAndDisplayImages';
-
 import MapEmbed from '../components/MapEmbed';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -13,12 +10,14 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Container from '@mui/material/Container';
 import UploadAndDisplayImages from '../components/UploadAndDisplayImages';
+import LocationTextField from '../components/LocationTextField';
+// import TitleText from '../components/TitleText';
 
 export default function AddMemory() {
 
     const [memTitle, setMemTitle] = useState('');
     const [memDesc, setMemDesc] = useState('');
-    const [memDate, setMemDate] = useState('');
+    const [memDate, setMemDate] = useState(null);
 
     const [selectedImages, setSelectedImages] = useState([]);
 
@@ -39,7 +38,6 @@ export default function AddMemory() {
         newSelectedImages.push(newImageItem)
         setSelectedImages(newSelectedImages)
 
-        // onChange(newSelectedImages)
     }
 
     const clearImages = () => {
@@ -84,9 +82,11 @@ export default function AddMemory() {
 
     return <Stack
     spacing={2}
-    className='big-stack'>
+    sx={{
+        paddingTop:'2%'
+    }}>
         
-        <Typography variant='h4'>Add a new memory!</Typography>
+        <Typography variant='h4'>Add a new memory</Typography>
 
         {titleAndDescription()}
 
@@ -98,6 +98,7 @@ export default function AddMemory() {
             onClear={clearImages}
         />
 
+        <LocationTextField></LocationTextField>
         {/* <MapEmbed position={[0, 0]}></MapEmbed> */}
     </Stack>
 }

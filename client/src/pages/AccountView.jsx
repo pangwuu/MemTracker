@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box'
 import styles from '../styles/AccountView.module.css'
-import Grid from '@mui/material/Grid'
+import Paper from '@mui/material/Paper'
 
 import UpdateIcon from '@mui/icons-material/Update';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -91,22 +91,22 @@ export default function AccountView({session}) {
         var text = null
         if (loading) {
             text = <Stack spacing={2} paddingTop={3}>
-                <Typography variant='h3'>Your account</Typography>
+                <Typography variant='h4'>Your account</Typography>
                 <Typography variant='body1'>Logged in as: {email}</Typography>
-                <Typography variant='h4'>Loading your bio... please wait</Typography>
+                <Typography variant='h5'>Loading your bio... please wait</Typography>
             </Stack>
         }
         else if (bio === '') {
             text = <Stack spacing={2} paddingTop={3}>
-                <Typography variant='h3'>Your account</Typography>
+                <Typography variant='h4'>Your account</Typography>
                 <Typography variant='body1'>Logged in as: {email}</Typography>
-                <Typography variant='h4'>You haven't set up a bio yet! Maybe go and create one!</Typography>
+                <Typography variant='h5'>You haven't set up a bio yet! Maybe go and create one!</Typography>
             </Stack>
             
         }
         else {
             text = <Stack spacing={2} paddingTop={3}>
-            <Typography variant='h3'>Your account</Typography>
+            <Typography variant='h4'>Your account</Typography>
                 <Typography variant='body1'>Logged in as: {email}</Typography>
                 <Typography variant='h5'>Your bio:</Typography>
                 <Typography variant='body1'>{bio}</Typography>
@@ -128,14 +128,26 @@ export default function AccountView({session}) {
                 onChange={(e) => {setTempBio(e.target.value)}}
                 />
                 <Box className={styles.box}>
+                    <Paper elevation={2} variant='outlined'>
+
                     <Button
                     onClick={() => {updateProfile(tempBio)
                         setBio(tempBio);
                     }}
+                                    sx={{
+                transition: 'transform 0.3s ease-in-out',
+                '&:hover': {
+                    transform: 'scale(1.02)',
+                },
+                paddingLeft: '2vh',
+                paddingRight: '2vh'
+                }}
                     startIcon={<UpdateIcon></UpdateIcon>}
                     disabled={loading}>
                         Confirm and update
                     </Button> 
+                    </Paper>
+
                 </Box>
 
                 
@@ -146,16 +158,25 @@ export default function AccountView({session}) {
     return <Stack spacing={2}>
         {currentBio()}
         {updateBioComps()}
-        
         <Box className={styles.box}>
-            <Button
-            color='error'
-            onClick={() => {
-                signOut();
-            }}
-            startIcon={<LogoutIcon></LogoutIcon>}>
-                Logout
-            </Button>
+            <Paper elevation={2} variant="outlined">
+                <Button
+                sx={{
+                transition: 'transform 0.3s ease-in-out',
+                '&:hover': {
+                    transform: 'scale(1.02)',
+                },
+                paddingLeft: '2vh',
+                paddingRight: '2vh'
+                }}
+                color='error'
+                onClick={() => {
+                    signOut();
+                }}
+                startIcon={<LogoutIcon></LogoutIcon>}>
+                    Logout
+                </Button>
+            </Paper>
         </Box>
 
 
