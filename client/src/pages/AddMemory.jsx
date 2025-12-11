@@ -7,15 +7,22 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import UploadAndDisplayImages from '../components/UploadAndDisplayImages';
 import LocationTextField from '../components/LocationTextField';
+import styles from '../styles/AccountView.module.css'
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import AddIcon from '@mui/icons-material/Add';
 
-export default function AddMemory() {
+import { supabase } from '../supabaseClient'
+
+export default function AddMemory({session}) {
 
     const [memTitle, setMemTitle] = useState('');
     const [memDesc, setMemDesc] = useState('');
     const [memDate, setMemDate] = useState(null);
 
     const [selectedImages, setSelectedImages] = useState([]);
-    const [userInput, setUserInput] = useState('');
+    const [locationInput, setlocationInput] = useState('');
     const [returnedResults, setReturnedResults] = useState([])
     const [locationValue, setLocationValue] = useState(null);
     const [autocompleteLoading, setAutocompleteLoading] = useState(false);
@@ -23,16 +30,18 @@ export default function AddMemory() {
     const [selectedLat, setSelectedLat] = useState(null);
     const [selectedLong, setSelectedLong] = useState(null);
 
+    const [uploading, setUploading] = useState(false);
+
     // used to autofill the text field and get user to select
     useEffect(() => {
 
         const timeoutId = setTimeout(() => {
             const fetchPlaces = async () => {
-                if (userInput.length <= 3) {
+                if (locationInput.length <= 3) {
                     return;
                 }
                 console.log('here!')
-                const searchLink = `https://nominatim.openstreetmap.org/search?q=${userInput}, Australia&format=jsonv2`
+                const searchLink = `https://nominatim.openstreetmap.org/search?q=${locationInput}, Australia&format=jsonv2`
                 
                 var result = []
 
@@ -62,8 +71,7 @@ export default function AddMemory() {
         
         return () => clearTimeout(timeoutId)
 
-    }, [userInput])
-
+    }, [locationInput])
 
 
     const updateImages = (newImage) => {
@@ -114,22 +122,106 @@ export default function AddMemory() {
         return <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker 
         label="Memory date"
+        format='DD/MM/YYYY'
         value={memDate}
-        onChange={(e) => {setMemDate(e.target.value)} }
+        onChange={(newValue) => setMemDate(newValue)}
          />
         </LocalizationProvider>
 
     }
 
-    function memoryLocationSelector() {
+    
+    async function uploadImages() {
+        // function to upload all images in selectedImages
+
+        const uploadedUrls = [];
+
+        let i;
+
+        for (i = 0; i < selectedImages.length; i++) {
+            const imageItem = selectedImages[i]
+            const imageFile = imageItem.image
+
+            // Generate unique filename + url so it can be identified
+            const fileExt = imageFile.name.split('.').pop();
+            const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+            const filePath = `${session.user.id}/${fileName}`;
+
+            // ensure a memory-images bucket appears there
+            const { data, error } = await supabase.storage
+                .from('memory-images')
+                .upload(filePath, imageFile, {
+                    upsert: false
+                });
+
+            if (error) {
+                throw error;
+            }
+
+            // Get public URL
+            const { data: urlData } = supabase.storage
+                .from('memory-images')
+                .getPublicUrl(filePath);
+
+            uploadedUrls.push(urlData.publicUrl);
+
+        }
+
+        return uploadedUrls;
+
+    }
+
+    async function addMemory() {
+        if (!memDate || !memTitle) {
+            alert("Please add a title and date!");
+            return;
+        }        
+
+        setUploading(true);
+
+        const { user } = session
+
+        const imageUrls = await uploadImages();
+
+        const updates = {
+            user_id: user.id,
+            title: memTitle,
+            description: memDesc,
+            memory_date: memDate.format('YYYY-MM-DD'),
+            location: `POINT(${selectedLong} ${selectedLat})`, 
+            image_urls: imageUrls
+
+        }
+
+        const {error} = await supabase.from('memories').insert(updates)
+
+        if (error) {
+            alert(error.message)
+        }
+        else {
+            // clear all forms
+            setMemTitle('')
+            setMemDesc('')
+            setSelectedImages([])
+            setlocationInput('')
+            setReturnedResults([])
+            setLocationValue(null)
+            setSelectedLat(null)
+            setSelectedLong(null)
+
+            
+        }
+
+        setUploading(false)
+        alert('Memory added!')
 
     }
 
     return <Stack
-    spacing={2}
-    sx={{
-        paddingTop:'2%'
-    }}>
+        spacing={2}
+        sx={{
+            paddingTop:'2%'
+        }}>
         
         <Typography variant='h4'>Add a new memory</Typography>
 
@@ -144,8 +236,8 @@ export default function AddMemory() {
         />
 
         <LocationTextField
-        userInput={userInput}
-        setUserInput={setUserInput}
+        locationInput={locationInput}
+        setlocationInput={setlocationInput}
         returnedResults={returnedResults}
         setReturnedResults={setReturnedResults}
         locationValue={locationValue}
@@ -159,6 +251,30 @@ export default function AddMemory() {
         selectedLong={selectedLong}
         setSelectedLong={setSelectedLong}
         />
+
+        <Box className={styles.box}>
+            <Paper elevation={2} variant="outlined">
+                <Button
+                size='large'
+                sx={{
+                transition: 'transform 0.3s ease-in-out',
+                '&:hover': {
+                    transform: 'scale(1.02)',
+                },
+                paddingLeft: '2vh',
+                paddingRight: '2vh'
+                }}
+
+                onClick={() => {
+                    addMemory();
+                }}
+                startIcon={<AddIcon/>}
+                >
+                Add memory!
+                </Button>
+            </Paper>
+        </Box>
+
 
     </Stack>
 }

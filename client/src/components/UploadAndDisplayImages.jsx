@@ -71,7 +71,9 @@ export default function UploadAndDisplayImages({images, onImageUpload, onClear})
             >
 
             {images.map((item, index) => (
-                <Card elevation={5}
+                <Card 
+                key={index}
+                elevation={5}
                 sx={{
                 transition: 'transform 0.3s ease-in-out',
                 '&:hover': {

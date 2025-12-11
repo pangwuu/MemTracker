@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AddMemory from './AddMemory';
 
-export default function MemoryCardPage() {
+export default function MemoryCardPage({session}) {
     // shows all memory cards
     // // Add a bunch of sample data's (simple CRUD application)
     // // what does a memory have?
@@ -10,6 +10,6 @@ export default function MemoryCardPage() {
     const [testMemory, setTestMemory] = useState(null);
     const [testMemoryError, setTestMemoryError] = useState(null);
 
-    return <AddMemory></AddMemory>
+    return <AddMemory session={session}></AddMemory>
     
 }

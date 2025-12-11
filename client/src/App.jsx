@@ -57,7 +57,7 @@ function renderContent() {
       case Views.Map:
         return <MapView />;
       case Views.Memory:
-        return <MemoryCardPage />;
+        return <MemoryCardPage session={session} />;
       default:
         return <div>Sorry! This website doesn't exist.</div>;
     }

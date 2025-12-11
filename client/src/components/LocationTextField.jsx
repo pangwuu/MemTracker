@@ -10,7 +10,7 @@ import MapEmbed from './MapEmbed';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 
-export default function LocationTextField({userInput, setUserInput, returnedResults, setReturnedResults, locationValue, setLocationValue, autocompleteLoading, setAutocompleteLoading, error, setError, selectedLat, setSelectedLat, selectedLong, setSelectedLong}) {
+export default function LocationTextField({locationInput, setlocationInput, returnedResults, setReturnedResults, locationValue, setLocationValue, autocompleteLoading, setAutocompleteLoading, error, setError, selectedLat, setSelectedLat, selectedLong, setSelectedLong}) {
 
 
     return <Stack spacing={2}>
@@ -27,7 +27,7 @@ export default function LocationTextField({userInput, setUserInput, returnedResu
                 options={returnedResults}
                 renderInput={(params) => <TextField {...params} label="Memory location" />}
                 onInputChange={(e, newInputValue) => {
-                    setUserInput(newInputValue)
+                    setlocationInput(newInputValue)
                 }}
                 getOptionLabel={(option) => option.display_name || ''}
                 onChange={

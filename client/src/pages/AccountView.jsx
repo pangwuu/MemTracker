@@ -27,6 +27,7 @@ export default function AccountView({session}) {
 
             const {user} = session;
 
+            // this GETS some data
             const { data, error } = await supabase
                 .from('profiles')
                 .select(`bio`)
