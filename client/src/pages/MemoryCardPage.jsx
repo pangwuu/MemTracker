@@ -2,24 +2,32 @@ import React, { useEffect, useState } from 'react';
 import AddMemory from './AddMemory';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
-
+import Container from '@mui/material/Container';
 import { supabase } from '../supabaseClient'
 import MemoryCard from '../components/MemoryCard';
+import { NavLink } from 'react-router';
 
-export default function MemoryCardPage({memories, setMemories, session}) {
+import ImageList from '@mui/material/ImageList';
+
+export default function MemoryCardPage({session, memories}) {
     // shows all memory cards
 
-    return <Stack spacing={2}>
+    return <Container maxWidth="lg"  sx={{ overflow: 'hidden' }}>
 
-        <Grid container spacing={3} paddingTop={3} columns={3} columnSpacing={2}>
-            {memories.map(memory => <MemoryCard isLoading={false} memory={memory} session={session}></MemoryCard>)}
-        </Grid>
+        <ImageList 
+        sx={{
+            padding: '3vh',
+            overflow: 'hidden'
+        }}>
+            {memories.map((memory, index) =>
+            <NavLink to={`/memoryDetailed/${memory.mem_id}`}>
+                <MemoryCard key={index} memory={memory}/>
+            </NavLink>
+            )}
 
-        <AddMemory session={session}></AddMemory>
+        </ImageList>
 
-    </Stack>
-
+    </Container>
     
-
     
 }

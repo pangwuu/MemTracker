@@ -14,9 +14,10 @@ import CardActionArea from '@mui/material/CardActionArea';
 import { supabase } from '../supabaseClient'
 import Skeleton from '@mui/material/Skeleton';
 
-
-export default function MemoryCard({isLoading, memory, session}) {
+export default function MemoryCard({memory}) {
     const [imageUrl, setImageUrl] = useState(null);
+    const [loadingImage, setLoadingImage] = useState(false)
+    const [imageExist, setImageExist] = useState(false)
     
     const imagePath = (memory && memory.image_urls && memory.image_urls.length > 0)
         ? memory.image_urls[0]
@@ -26,6 +27,7 @@ export default function MemoryCard({isLoading, memory, session}) {
         if (!imagePath) return;
 
         let active = true;
+        setLoadingImage(true)
 
         // ensures the path we use to download the file is correct - there's a lot of subfolders and we need to clean it up
         const getCleanPath = (path) => {
@@ -55,10 +57,12 @@ export default function MemoryCard({isLoading, memory, session}) {
                 console.log('got the image!')
                 const imageUrl = URL.createObjectURL(data);
                 setImageUrl(imageUrl);
+                setImageExist(true)
             }
         }
 
         downloadImage();
+        setLoadingImage(false);
 
         return () => {
             active = false;
@@ -73,35 +77,68 @@ export default function MemoryCard({isLoading, memory, session}) {
         return formattedDateSlash.replace('-', '/');  
     }
 
-    return <Box width={'100%'} sx={{
-        ':hover': {
-          transition: 'transform 0.4s ease;',
-          transform: 'scale(1.01)'
-        }
-        }}>
-        {!isLoading && memory && <Card>
-        <CardActionArea>
+    function imageComponent() {
+        if (imageExist) {
+            return  <>
             <CardMedia
             component="img"
             image={imageUrl}
+            loading='lazy'
             >
             </CardMedia>
             <Divider/>
+            </>
+        }
+        return <></>
+        
+    }
+
+    function textComponent() {
+
+    }
+
+    return <>{!loadingImage && memory && 
+        <CardActionArea>
+            <Card sx={{
+        ':hover': {
+          transition: 'transform 0.4s ease;',
+          transform: 'scale(1.005)'
+        },
+        height: '99%'
+        }} >
+            {imageComponent()}
             <CardContent>
-                <Typography variant="h5">
+                <Typography variant="h5"
+                sx={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                }}
+                >
                 {memory.title}
                 </Typography>
                 <Typography variant="body1">
                 {getCleanDate(memory.memory_date)}
                 </Typography>
-                <Typography variant="body1">
-                {memory.location_plain_string}
+                <Typography variant="body1"
+                sx={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                }}>
+                {memory.location_plain_string.split(',')[0]}
                 </Typography>               
             </CardContent>
+            </Card>
         </CardActionArea>
 
-    </Card>}
-    {isLoading || !memory && <Skeleton variant="rectangular"/>}    
-    </Box>
+    // </Card>
+    }
+
+    {(loadingImage || !memory) && <Skeleton variant="rectangular" />}
+
+    </>
+
+
 
 }

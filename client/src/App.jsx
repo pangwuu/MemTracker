@@ -4,7 +4,15 @@ import LoginPage from './pages/LoginPage';
 import MapView from './pages/MapView';
 import MemoryCardPage from './pages/MemoryCardPage'
 import AccountView from './pages/AccountView';
+import AddMemory from './pages/AddMemory.jsx';
 import React, { useState, useEffect, useCallback } from 'react';
+
+import { BrowserRouter, Routes, Route, Navigate, NavLink, useNavigate } from "react-router-dom";
+import PersonIcon from '@mui/icons-material/Person';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import MapIcon from '@mui/icons-material/Map';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 import { supabase } from './supabaseClient'
 import {Views} from './consts.ts'
@@ -18,6 +26,7 @@ import AppBar from '@mui/material/AppBar';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
+import MemoryDetailed from './pages/MemoryDetailed.jsx';
 
 // Define your custom font family
 const customFont = "'Roboto', sans-serif"; // Replace 'Roboto' with your chosen font
@@ -60,21 +69,11 @@ function App() {
         const {user} = session
         
         const {data, error} = await supabase.from('memories')
-        .select(`title, description, memory_date, location, image_urls, location_plain_string`).eq('user_id', user.id)
+        .select(`mem_id, title, description, memory_date, location, image_urls, location_plain_string`).eq('user_id', user.id)
 
         if (error) {
             alert(error)
         }
-
-        // console.log(data);
-        // let i = 0;
-        // for (i = 0; i < data.length; i++) {
-        //     console.log(data[i].title)
-        //     console.log(data[i].description)
-        //     console.log(data[i].memory_date)
-        //     console.log(data[i].location)
-        //     console.log(data[i].image_urls)
-        // }
 
         setLoadingMemories(false)
         setMemories(data);
@@ -85,56 +84,80 @@ function App() {
       getMemories()
     }, [getMemories])
 
-    function renderContent() {
-        if (!session) return <LoginPage />;
-        
-        // Switch logic only handles the SPECIFIC page content now
-        switch (currentView) {
-          case Views.User:
-            return <AccountView session={session} />;
-          case Views.Map:
-            return <MapView />;
-          case Views.Memory:
-            return <MemoryCardPage memories={memories} setMemories={() => {setMemories}} session={session} />;
-          default:
-            return <div>Sorry! This website doesn't exist.</div>;
-        }
-      }
+  if (!session) {
+        return <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <Routes>
+              <Route path='/' element={<LoginPage></LoginPage>}></Route>
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>;
+    }
 
-  return <ThemeProvider
-  theme={theme}>
-    <CssBaseline /> 
-      {session && (<Stack>
-        
-        <AppBar position='static'
+  const appBar = () => {
+    return <AppBar position='static'
         color='inherit'
         sx={{
           boxShadow: '1'
         }}>
-          <Toolbar>
-            <Box>
-              <Typography variant='h5'>Memory tracker</Typography>
-            </Box>
-            <Box sx={{ flexGrow: 1 }} />
-            <Box>
-              <ViewSwitcher
-              onSwitchView={handleView}
-              currentView={currentView}
-              />
-            </Box>
+        <Toolbar>
+          <Box>
+            <Typography variant='h5'>Our memories</Typography>
+          </Box>
+          <Box sx={{ flexGrow: 1 }} />
+          <Box>
+            <ToggleButtonGroup
+          value={currentView}
+          exclusive
+          onChange={handleView}
+          aria-label="page view"
+          sx={{
+            backgroundColor: 'background.paper', 
+            borderRadius: 1
+          }}
+          size='small'
+          color='secondary'
+        >
+          <ToggleButton value={'account'} aria-label={Views.User}>
+            <NavLink to={'account'}>
+              <PersonIcon />
+            </NavLink>
+            
+          </ToggleButton>
+          <ToggleButton value={'/'} aria-label={Views.Memory}>
+            <NavLink to={'/'}>
+              <CollectionsIcon />
+            </NavLink>
+          </ToggleButton>
+          <ToggleButton value={'mapview'} aria-label={Views.Map}>
+            <NavLink to={'mapview'}>
+              <MapIcon />
+            </NavLink>
+            
+          </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
           </Toolbar>
-        </AppBar>       
-        
- 
-        <Container>
-          {renderContent()}
-        </Container>
-      </Stack>
-
-      )}
+        </AppBar>    
+  }
+  
+  return <ThemeProvider
+  theme={theme}>
+    <CssBaseline/> 
+    <BrowserRouter>
+      {appBar()}
       
-      {!session && <LoginPage />}
-      </ThemeProvider>
+      <Routes>
+        <Route path='account' element={<AccountView session={session} />}/>
+        <Route path='/' element={<MemoryCardPage memories={memories} setMemories={() => {setMemories}} session={session} />}/>
+        <Route path='mapview' element={<MapView></MapView>}></Route>
+        <Route path='addMemory' element={<AddMemory session={session}></AddMemory>}></Route>
+        <Route path="/memoryDetailed/:memoryId" element={<MemoryDetailed memories={memories} />}></Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+
+  </ThemeProvider>
   
 }
 

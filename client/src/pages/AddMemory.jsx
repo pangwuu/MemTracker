@@ -157,11 +157,6 @@ export default function AddMemory({session}) {
                 throw error;
             }
 
-            // Get public URL
-            const { data: urlData } = supabase.storage
-                .from('memory-images')
-                .getPublicUrl(filePath);
-
             uploadedUrls.push(filePath);
 
         }
@@ -188,7 +183,7 @@ export default function AddMemory({session}) {
             description: memDesc,
             memory_date: memDate.format('YYYY-MM-DD'),
             location_plain_string: locationValue,
-            location: `POINT(${selectedLong} ${selectedLat})`, 
+            location: `POINT(${selectedLong} ${selectedLat})`,
             image_urls: imageUrls
 
         }
@@ -219,6 +214,7 @@ export default function AddMemory({session}) {
 
     return <Stack
         spacing={2}
+        paddingBottom={3}
         sx={{
             paddingTop:'2%'
         }}>

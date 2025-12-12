@@ -12,7 +12,6 @@ import ImageListItem from "@mui/material/ImageListItem";
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Paper from '@mui/material/Paper';
 
 export default function UploadAndDisplayImages({images, onImageUpload, onClear}) {
 

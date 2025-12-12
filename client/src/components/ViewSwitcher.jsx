@@ -27,13 +27,13 @@ export default function ViewSwitcher({currentView, onSwitchView}) {
       size='small'
       color='secondary'
     >
-      <ToggleButton value={Views.User} aria-label={Views.User}>
+      <ToggleButton value={'account'} aria-label={Views.User}>
         <PersonIcon />
       </ToggleButton>
-      <ToggleButton value={Views.Memory} aria-label={Views.Memory}>
+      <ToggleButton value={'memories'} aria-label={Views.Memory}>
         <CollectionsIcon />
       </ToggleButton>
-      <ToggleButton value={Views.Map} aria-label={Views.Map}>
+      <ToggleButton value={'mapview'} aria-label={Views.Map}>
         <MapIcon />
       </ToggleButton>
     </ToggleButtonGroup>

@@ -12,8 +12,6 @@ import Paper from '@mui/material/Paper'
 import UpdateIcon from '@mui/icons-material/Update';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-import FullscreenToggleComponent from './FullScreen';
-
 export default function AccountView({session}) {
     const [loading, setLoading] = useState(true)
     const [bio, setBio] = useState('')
@@ -121,41 +119,38 @@ export default function AccountView({session}) {
 
     function updateBioComps() {
         return <Stack spacing={2}>
-                <TextField
-                label="New bio"
-                multiline
-                minRows={4}
-                maxRows={6}
-                value={tempBio}
-                onChange={(e) => {setTempBio(e.target.value)}}
-                />
-                <Box className={styles.box}>
-                    <Paper elevation={2} variant='outlined'>
+        <TextField
+        label="New bio"
+        multiline
+        minRows={4}
+        maxRows={6}
+        value={tempBio}
+        onChange={(e) => {setTempBio(e.target.value)}}
+        />
+        <Box className={styles.box}>
+            <Paper elevation={2} variant='outlined'>
 
-                    <Button
-                    onClick={() => {updateProfile(tempBio)
-                        setBio(tempBio);
-                    }}
-                    sx={{
+                <Button
+                onClick={() => {updateProfile(tempBio)
+                    setBio(tempBio);
+                }}
+                sx={{
                     transition: 'transform 0.3s ease-in-out',
                     '&:hover': {
                         transform: 'scale(1.02)',
                     },
                     paddingLeft: '2vh',
                     paddingRight: '2vh'
-                    }}
-                    startIcon={<UpdateIcon></UpdateIcon>}
-                    disabled={loading}>
-                        Confirm and update
-                    </Button> 
-                    </Paper>
+                }}
+                startIcon={<UpdateIcon></UpdateIcon>}
+                disabled={loading}>
+                    Confirm and update
+                </Button> 
+            </Paper>
 
-                </Box>
-
-                <FullscreenToggleComponent></FullscreenToggleComponent>
-
+        </Box>
                 
-                </Stack>
+    </Stack>
 
     }
 
