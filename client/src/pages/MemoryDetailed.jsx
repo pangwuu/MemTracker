@@ -3,17 +3,14 @@ import { Typography, Container, ImageListItem, ImageList, Stack, Button, Box, Ch
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import Fab from '@mui/material/Fab';
 import { useState, useEffect } from "react";
 import { supabase } from '../supabaseClient'
 import getCleanDate from "../helpers/getCleanDate";
 import MapEmbed from "../components/MapEmbed";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import dayjs from 'dayjs';
 
 export default function MemoryDetailed({ memories }) {
 
@@ -104,8 +101,15 @@ export default function MemoryDetailed({ memories }) {
             {imageUrls && imageUrls.length >= 1 && 
             <>
                 <Typography variant="h4">Pictures of your moment</Typography>
-                <ImageList cols={2} gap={3} sx={{
-                    overflow: 'hidden'
+                <ImageList gap={3} sx={{
+                    overflow: 'hidden',
+                        columnCount: {
+                        xs: '1 !important',
+                        sm: '2 !important',
+                        md: '3 !important',
+                        lg: '4 !important',
+                        xl: '5 !important',
+                    }
                 }}>
                     {imageUrls.map((imageUrl) => {
                         return <ImageListItem key={imageUrl}

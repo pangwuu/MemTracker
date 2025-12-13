@@ -86,20 +86,14 @@ export default function MemoryCard({memory}) {
 
     return <>{!loadingImage && memory && 
         <CardActionArea>
-            <Card sx={{
-        ':hover': {
-          transition: 'transform 0.4s ease;',
-          transform: 'scale(1.005)'
-        },
-        height: '99%'
-        }} >
+            <Card>
             {imageComponent()}
             <CardContent>
                 <Typography variant="h5"
                 sx={{
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap'
+                    textWrap: 'wrap'
                 }}
                 >
                 {memory.title}

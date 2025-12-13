@@ -14,6 +14,10 @@ import Paper from '@mui/material/Paper';
 import AddIcon from '@mui/icons-material/Add';
 
 import { supabase } from '../supabaseClient'
+import Container from '@mui/material/Container';
+import Fab from '@mui/material/Fab';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useNavigate } from "react-router-dom";
 
 export default function AddMemory({session}) {
 
@@ -31,6 +35,8 @@ export default function AddMemory({session}) {
     const [selectedLong, setSelectedLong] = useState(null);
 
     const [uploading, setUploading] = useState(false);
+
+    let navigate = useNavigate();
 
     // used to autofill the text field and get user to select
     useEffect(() => {
@@ -213,14 +219,25 @@ export default function AddMemory({session}) {
 
     }
 
-    return <Stack
+    return <Container>
+
+    <Stack
         spacing={2}
         paddingBottom={3}
         sx={{
             paddingTop:'2%'
         }}>
-        
-        <Typography variant='h4'>Add a new memory</Typography>
+
+        {/* Header for button and back button*/}
+        <Stack spacing={2} direction={'row'} flexWrap="wrap" useFlexGap>
+            <Box alignItems={'flex-start'}>
+                <Fab size="medium" onClick={() => navigate(-1)} sx={{
+                    boxShadow: '1',
+                    marginTop: '0.5vh'
+                }}><ArrowBackIcon/></Fab>
+            </Box>
+            <Typography variant="h3">Add a new memory</Typography>
+        </Stack>        
 
         {titleAndDescription()}
 
@@ -254,24 +271,19 @@ export default function AddMemory({session}) {
                 <Button
                 size='large'
                 sx={{
-                transition: 'transform 0.3s ease-in-out',
-                '&:hover': {
-                    transform: 'scale(1.02)',
-                },
-                paddingLeft: '2vh',
-                paddingRight: '2vh'
+                    paddingLeft: '2vh',
+                    paddingRight: '2vh'
                 }}
-
-                onClick={() => {
-                    addMemory();
-                }}
-                startIcon={<AddIcon/>}
-                >
+                onClick={() => {addMemory()}}
+                startIcon={<AddIcon/>}>
                 Add memory!
                 </Button>
             </Paper>
         </Box>
 
-
     </Stack>
+
+    </Container>
+    
+    
 }
