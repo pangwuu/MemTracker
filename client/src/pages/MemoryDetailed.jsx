@@ -1,5 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Typography, Container, ImageListItem, ImageList, Stack, Button, Box } from "@mui/material";
+import { Typography, Container, ImageListItem, ImageList, Stack, Button, Box, Chip, Card, Paper} from "@mui/material";
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import LocationPinIcon from '@mui/icons-material/LocationPin';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import Fab from '@mui/material/Fab';
 import { useState, useEffect } from "react";
 import { supabase } from '../supabaseClient'
 import getCleanDate from "../helpers/getCleanDate";
@@ -14,6 +19,7 @@ export default function MemoryDetailed({ memories }) {
 
     const [imageUrls, setImageUrls] = useState([])
     const { memoryId } = useParams();
+
     let navigate = useNavigate();
 
     const memory = memories && memories.find(m => m.mem_id == memoryId);
@@ -69,11 +75,35 @@ export default function MemoryDetailed({ memories }) {
             
             <Stack padding={2} spacing={2}>
 
+            <Stack spacing={2} direction={'row'} flexWrap="wrap" useFlexGap>
+                <Box alignItems={'flex-start'}>
+                <Fab size="medium" onClick={() => navigate(-1)} sx={{
+                    boxShadow: '1',
+                    marginTop: '0.5vh'
+                }}><ArrowBackIcon/></Fab>
+                
+            </Box>
             <Typography variant="h3">{memory.title}</Typography>
+            </Stack>
+            
+            <Stack spacing={2} direction={'row'} flexWrap="wrap" useFlexGap>
+                {memory.memory_date !== null && 
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Chip icon={<CalendarTodayIcon/>} label={getCleanDate(memory.memory_date)}></Chip>
+                </LocalizationProvider>
+                }
+                {memory.memory_date == null && <Chip label={'No date provided'}/>}
+
+                {memory.location_plain_string !== null && <Chip label={memory.location_plain_string} icon={<LocationPinIcon></LocationPinIcon>}></Chip>}
+                {memory.location_plain_string == null && <Chip label={"No location provided"}/>}
+            </Stack>
+
+            
+            
 
             {imageUrls && imageUrls.length >= 1 && 
             <>
-                <Typography variant="h4">{`Pictures of ${memory.title}`}</Typography>
+                <Typography variant="h4">Pictures of your moment</Typography>
                 <ImageList cols={2} gap={3} sx={{
                     overflow: 'hidden'
                 }}>
@@ -100,36 +130,30 @@ export default function MemoryDetailed({ memories }) {
             {!imageUrls || imageUrls.length == 0 && <Typography variant="h4">No photos of this memory!</Typography>}
 
             {memory.description !== null && <>
-                <Typography variant="h5">Description</Typography>
-                <Typography variant="body1">{memory.description}</Typography>
+            <Typography variant="h5">The story</Typography>
+            <Typography variant="body1">{memory.description}</Typography>
             </>}
             {memory.description == null && <Typography variant="h5">No description added</Typography>}
 
-            
-            {memory.memory_date !== null && 
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Typography variant="h5">Date</Typography>
-                <Typography variant="body1">{getCleanDate(memory.memory_date)}</Typography>
-                <DateCalendar defaultValue={dayjs(memory.memory_date)} readOnly/>
-            </LocalizationProvider>
-            }
-            {memory.memory_date == null && <Typography variant="h5">No date provided</Typography>}
 
-            <Typography variant="h5">Location</Typography>
-            {memory.location_plain_string !== null && <Typography variant="h6">{memory.location_plain_string}</Typography>}
-            {memory.location_plain_string == null && <Typography variant="h6">No location provided</Typography>}
-            
             {memory.location_lat && memory.location_long && <MapEmbed position={[memory.location_lat, memory.location_long]}></MapEmbed>}
             
             {/* Only render this message if there is a location but it failed to render - otherwise just the first error message is enough */}
             {memory.location_plain_string && memory.location_lat == null || !memory.location_long == null && <Typography variant="h6">Failed to provide a map embed</Typography>}
 
             <Box alignSelf={"center"}>
-                <Button href="/">
-                    <Typography variant="body1">
-                        Back to all memories
-                    </Typography>
+                <Paper variant="outlined">
+                <Button onClick={() => navigate(-1)}>
+                    <Stack direction={'row'} spacing={1}>
+                        <ArrowBackIcon/>
+                        <Typography variant="body1">
+                            Back to all memories
+                        </Typography>
+                    </Stack>
+
                 </Button>
+                </Paper>
+
             </Box>
 
             

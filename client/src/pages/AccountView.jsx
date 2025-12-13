@@ -136,10 +136,6 @@ export default function AccountView({session}) {
                     setBio(tempBio);
                 }}
                 sx={{
-                    transition: 'transform 0.3s ease-in-out',
-                    '&:hover': {
-                        transform: 'scale(1.02)',
-                    },
                     paddingLeft: '2vh',
                     paddingRight: '2vh'
                 }}
@@ -164,10 +160,6 @@ export default function AccountView({session}) {
             <Paper elevation={2} variant="outlined">
                 <Button
                 sx={{
-                transition: 'transform 0.3s ease-in-out',
-                '&:hover': {
-                    transform: 'scale(1.02)',
-                },
                 paddingLeft: '2vh',
                 paddingRight: '2vh'
                 }}
