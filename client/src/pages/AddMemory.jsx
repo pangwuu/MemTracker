@@ -183,9 +183,10 @@ export default function AddMemory({session}) {
             description: memDesc,
             memory_date: memDate.format('YYYY-MM-DD'),
             location_plain_string: locationValue,
+            location_lat: selectedLat,
+            location_long: selectedLong,
             location: `POINT(${selectedLong} ${selectedLat})`,
             image_urls: imageUrls
-
         }
 
         const {error} = await supabase.from('memories').insert(updates)

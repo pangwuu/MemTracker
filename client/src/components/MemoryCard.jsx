@@ -5,14 +5,12 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import CardActions from '@mui/material/CardActions';
-
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import { supabase } from '../supabaseClient'
 import Skeleton from '@mui/material/Skeleton';
+
+import getCleanDate from '../helpers/getCleanDate'
 
 export default function MemoryCard({memory}) {
     const [imageUrl, setImageUrl] = useState(null);
@@ -38,7 +36,7 @@ export default function MemoryCard({memory}) {
                 return parts[1]; 
             }
             
-            console.warn('Could not extract relative path from:', path);
+            // console.warn('Could not extract relative path from:', path);
             return path;
         };
 
@@ -46,7 +44,6 @@ export default function MemoryCard({memory}) {
         
         // this is how we download an image
         async function downloadImage() {
-            console.log('trying to get the image')
             const { data, error } = await supabase.storage
                 .from('memory-images')
                 .download(cleanPath)
@@ -54,7 +51,6 @@ export default function MemoryCard({memory}) {
             if (error) {
                 console.error('Error loading image:', error);
             } else if (active && data) {
-                console.log('got the image!')
                 const imageUrl = URL.createObjectURL(data);
                 setImageUrl(imageUrl);
                 setImageExist(true)
@@ -70,16 +66,10 @@ export default function MemoryCard({memory}) {
         };        
 
     }, [imagePath]); 
-    
-    const getCleanDate = (oldDate) => {
-        const dateObj = new Date(oldDate)
-        const formattedDateSlash = dateObj.toLocaleDateString('en-AU');   
-        return formattedDateSlash.replace('-', '/');  
-    }
 
     function imageComponent() {
         if (imageExist) {
-            return  <>
+            return <>
             <CardMedia
             component="img"
             image={imageUrl}
@@ -93,9 +83,6 @@ export default function MemoryCard({memory}) {
         
     }
 
-    function textComponent() {
-
-    }
 
     return <>{!loadingImage && memory && 
         <CardActionArea>
@@ -132,7 +119,6 @@ export default function MemoryCard({memory}) {
             </Card>
         </CardActionArea>
 
-    // </Card>
     }
 
     {(loadingImage || !memory) && <Skeleton variant="rectangular" />}

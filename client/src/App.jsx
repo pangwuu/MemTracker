@@ -7,7 +7,7 @@ import AccountView from './pages/AccountView';
 import AddMemory from './pages/AddMemory.jsx';
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { BrowserRouter, Routes, Route, Navigate, NavLink, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, NavLink, useNavigate, Link } from "react-router-dom";
 import PersonIcon from '@mui/icons-material/Person';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import MapIcon from '@mui/icons-material/Map';
@@ -27,6 +27,7 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import MemoryDetailed from './pages/MemoryDetailed.jsx';
+import { Button } from '@mui/material';
 
 // Define your custom font family
 const customFont = "'Roboto', sans-serif"; // Replace 'Roboto' with your chosen font
@@ -69,7 +70,7 @@ function App() {
         const {user} = session
         
         const {data, error} = await supabase.from('memories')
-        .select(`mem_id, title, description, memory_date, location, image_urls, location_plain_string`).eq('user_id', user.id)
+        .select(`mem_id, title, description, memory_date, location, image_urls, location_plain_string, location_lat, location_long`).eq('user_id', user.id)
 
         if (error) {
             alert(error)
@@ -102,7 +103,10 @@ function App() {
         }}>
         <Toolbar>
           <Box>
-            <Typography variant='h5'>Our memories</Typography>
+            <Button href="/" color='black' sx={{ textTransform: 'none' }}>
+              <Typography variant='h5'>Our memories!</Typography>
+            </Button>
+
           </Box>
           <Box sx={{ flexGrow: 1 }} />
           <Box>
@@ -147,11 +151,12 @@ function App() {
     <BrowserRouter>
       {appBar()}
       
+      {/* Deinf routes around here - to each page we may add! */}
       <Routes>
-        <Route path='account' element={<AccountView session={session} />}/>
+        <Route path='/account' element={<AccountView session={session} />}/>
         <Route path='/' element={<MemoryCardPage memories={memories} setMemories={() => {setMemories}} session={session} />}/>
-        <Route path='mapview' element={<MapView></MapView>}></Route>
-        <Route path='addMemory' element={<AddMemory session={session}></AddMemory>}></Route>
+        <Route path='/mapview' element={<MapView></MapView>}></Route>
+        <Route path='/addMemory' element={<AddMemory session={session}></AddMemory>}></Route>
         <Route path="/memoryDetailed/:memoryId" element={<MemoryDetailed memories={memories} />}></Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

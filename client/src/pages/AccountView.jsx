@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
 import Box from '@mui/material/Box'
 import styles from '../styles/AccountView.module.css'
 import Paper from '@mui/material/Paper'
@@ -154,7 +155,9 @@ export default function AccountView({session}) {
 
     }
 
-    return <Stack spacing={2}>
+    return <Container  maxWidth="lg"  sx={{ overflow: 'hidden' }}>
+
+    <Stack spacing={2}>
         {currentBio()}
         {updateBioComps()}
         <Box className={styles.box}>
@@ -181,6 +184,8 @@ export default function AccountView({session}) {
 
         
         </Stack>
+    </Container>
+    
     
     
 
