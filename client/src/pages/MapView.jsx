@@ -1,5 +1,6 @@
 import Stack from "@mui/material/Stack";
 import MapEmbed from "../components/MapEmbed";
+import MemoryMapEmbed from "../components/MemoryMapEmbed";
 import Container from "@mui/material/Container"
 import NewMemoryButton from "../components/NewMemoryLinkButton";
 import { Typography } from "@mui/material";
@@ -13,12 +14,15 @@ export default function MapView({memories}) {
         lon: parseFloat(memory.location_long) 
     }));
 
-    // Filter out invalid points (where lat/lon ended up NaN or undefined)
+    // Filter out invalid points (where lat/lon ended up NaN or undefine or nulld)
     const validPoints = points.filter(p => !isNaN(p.lat) && !isNaN(p.lon));
+    const validMemories = memories.filter(m => !isNaN(m.location_lat) && m.location_lat !== null && !isNaN(m.location_long) && m.location_long !== null)
 
     return <Container maxWidth="lg"  sx={{ overflow: 'hidden' }}>
         <Stack padding={2} gap={2} alignItems={'center'}>
-            {validPoints && validPoints.length > 0 && <MapEmbed positions={validPoints} memories={memories}/>}
+            
+            {validPoints && validPoints.length > 0 && 
+            <MemoryMapEmbed memories={validMemories}></MemoryMapEmbed>}
 
             {!validPoints || validPoints.length == 0 && memories && memories.length > 0 && <Typography variant="h5">Loading...</Typography>}
             {(!validPoints || validPoints.length == 0) && (!memories || memories.length == 0) && <Typography variant="h5">No memories yet!</Typography>}
