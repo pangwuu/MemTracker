@@ -44,7 +44,10 @@ export default function LocationTextField({locationInput, setlocationInput, retu
 
             {/* display the location on a map if it exists */}
             {locationValue !== null && 
-            <MapEmbed position={[selectedLat, selectedLong]}></MapEmbed>}    
+            <MapEmbed positions={[
+                {lat: selectedLat, 
+                lon: selectedLong}
+            ]}></MapEmbed>}    
 
             {/* maybe remove this if many errors occur */}
             {error && alert('An error occured during autocomplete or location selection')}

@@ -140,7 +140,14 @@ export default function MemoryDetailed({ memories }) {
             {memory.description == null && <Typography variant="h5">No description added</Typography>}
 
 
-            {memory.location_lat && memory.location_long && <MapEmbed position={[memory.location_lat, memory.location_long]}></MapEmbed>}
+            {memory.location_lat && memory.location_long && <MapEmbed position={
+                [
+                {
+                    lat: memory.location_lat,
+                    lon: memory.location_long
+                }
+                
+                ]}></MapEmbed>}
             
             {/* Only render this message if there is a location but it failed to render - otherwise just the first error message is enough */}
             {memory.location_plain_string && memory.location_lat == null || !memory.location_long == null && <Typography variant="h6">Failed to provide a map embed</Typography>}

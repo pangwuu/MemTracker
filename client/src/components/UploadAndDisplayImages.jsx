@@ -25,12 +25,8 @@ export default function UploadAndDisplayImages({images, onImageUpload, onClear})
                 startIcon={<CloudUploadIcon />}
                 height={5}
                 sx={{
-                transition: 'transform 0.3s ease-in-out',
-                '&:hover': {
-                    transform: 'scale(1.02)',
-                },
-                paddingLeft: '2vh',
-                paddingRight: '2vh'
+                    paddingLeft: '2vh',
+                    paddingRight: '2vh'
                 }}
                 >
                 Upload images of your memory
@@ -100,10 +96,6 @@ export default function UploadAndDisplayImages({images, onImageUpload, onClear})
                     startIcon= {<DeleteIcon/>}
                     onClick={onClear}
                     sx={{
-                    transition: 'transform 0.3s ease-in-out',
-                    '&:hover': {
-                        transform: 'scale(1.02)',
-                    },
                     paddingLeft: '2vh',
                     paddingRight: '2vh'
                     }}

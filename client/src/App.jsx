@@ -155,7 +155,7 @@ function App() {
       <Routes>
         <Route path='/account' element={<AccountView session={session} />}/>
         <Route path='/' element={<MemoryCardPage memories={memories} setMemories={() => {setMemories}} session={session} />}/>
-        <Route path='/mapview' element={<MapView></MapView>}></Route>
+        <Route path='/mapview' element={<MapView memories={memories}/>}></Route>
         <Route path='/addMemory' element={<AddMemory session={session}></AddMemory>}></Route>
         <Route path="/memoryDetailed/:memoryId" element={<MemoryDetailed memories={memories} />}></Route>
         <Route path="*" element={<Navigate to="/" replace />} />
