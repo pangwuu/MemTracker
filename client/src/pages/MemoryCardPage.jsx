@@ -20,7 +20,7 @@ export default function MemoryCardPage({session, memories}) {
             gap: '10px'
         }}>
             {memories.map((memory, index) =>
-            <NavLink to={`/memoryDetailed/${memory.mem_id}`} style={{ textDecoration: 'none' }}>
+            <NavLink to={`/memoryDetailed/${memory.mem_id}`} style={{ textDecoration: 'none' }} key={index}>
                 <MemoryCard key={index} memory={memory}/>
             </NavLink>
             )}

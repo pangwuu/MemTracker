@@ -12,6 +12,7 @@ import Paper from '@mui/material/Paper'
 
 import UpdateIcon from '@mui/icons-material/Update';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router';
 
 export default function AccountView({session}) {
     const [loading, setLoading] = useState(true)
@@ -19,6 +20,8 @@ export default function AccountView({session}) {
     const [tempBio, setTempBio] = useState('')
 
     const email = session['user']['email'];
+
+    let navigate = useNavigate()
 
     useEffect(() => {
         let ignore = false;
@@ -84,6 +87,7 @@ export default function AccountView({session}) {
         if (error) {
             alert(error.message)
         }
+        navigate('/')
     }
 
     function currentBio() {

@@ -4,23 +4,37 @@ import 'leaflet/dist/leaflet.css';
 import * as geolib from 'geolib';
 
 
+function MapControllerChild({positions}) {
+  // calculated ideal zoom and fits the bounds automatically
+  const map = useMap();
+
+  useEffect(() => {
+    if (!positions || positions.length === 0) {
+      return
+    }
+    // recalculate zoom levels if positions change!
+    const bounds = geolib.getBounds(positions);
+    
+    const corner1 = [bounds.minLat, bounds.minLng];
+    const corner2 = [bounds.maxLat, bounds.maxLng];
+
+    // "fitBounds" automatically calculates the ideal zoom and center
+    map.fitBounds([corner1, corner2], { padding: [40, 40], maxZoom: 15, animate: true });
+
+  }, [positions, map])
+
+}
+
 export default function MapEmbed({positions}) {
-  //   expected input [
-  //     { latitude: 51.51, longitude: 7.46 },
-  //     { latitude: 51.52, longitude: 7.47 },
-  //     { latitude: 51.53, longitude: 7.48 }
-  // ]
 
   // calculate central position
-  const center = geolib.getCenterOfBounds(positions)
-  console.log(center)
   
-
-  // calculate ideal zoom to show all markers - excluding outliers
-
-
+  // if (positions.length >= 1) {
+    const center = geolib.getCenterOfBounds(positions)
+    const initialCenter = [center.latitude, center.longitude];
+    
     return <MapContainer
-    center={position} 
+    center={initialCenter} 
             zoom={13} 
             scrollWheelZoom={true} 
             style={{ height: "50vh", width: "100%" }}
@@ -29,8 +43,12 @@ export default function MapEmbed({positions}) {
       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
     />
-    <Marker position={position}>
+    {positions.map((position, index) => 
+    <Marker position={[position.lat, position.lon]} key={index}>
         <Popup>Memory location!</Popup>
-    </Marker>
+    </Marker>)}
+
+    <MapControllerChild positions={positions}></MapControllerChild>
+
   </MapContainer>
 }

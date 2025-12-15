@@ -140,7 +140,7 @@ export default function MemoryDetailed({ memories }) {
             {memory.description == null && <Typography variant="h5">No description added</Typography>}
 
 
-            {memory.location_lat && memory.location_long && <MapEmbed position={
+            {memory.location_lat && memory.location_long && <MapEmbed positions={
                 [
                 {
                     lat: memory.location_lat,

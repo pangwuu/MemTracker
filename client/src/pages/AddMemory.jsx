@@ -19,7 +19,7 @@ import Fab from '@mui/material/Fab';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from "react-router-dom";
 
-export default function AddMemory({session}) {
+export default function AddMemory({session, onMemoryAdded}) {
 
     const [memTitle, setMemTitle] = useState('');
     const [memDesc, setMemDesc] = useState('');
@@ -201,6 +201,10 @@ export default function AddMemory({session}) {
             alert(error.message)
         }
         else {
+
+            await onMemoryAdded()
+
+
             // clear all forms
             setMemTitle('')
             setMemDesc('')
