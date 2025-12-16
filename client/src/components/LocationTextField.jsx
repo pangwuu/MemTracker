@@ -9,8 +9,7 @@ import MapEmbed from './MapEmbed';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 
-export default function LocationTextField({locationInput, setlocationInput, returnedResults, setReturnedResults, locationValue, setLocationValue, autocompleteLoading, setAutocompleteLoading, error, setError, selectedLat, setSelectedLat, selectedLong, setSelectedLong}) {
-
+export default function LocationTextField({locationInput, setlocationInput, returnedResults, setReturnedResults, locationValue, setLocationValue, autocompleteLoading, setAutocompleteLoading, error, setError, selectedLat, setSelectedLat, selectedLong, setSelectedLong, mode}) {
 
     return <Stack spacing={2}>
             {/* for loading state - indeterminate linear bar */}
@@ -19,7 +18,6 @@ export default function LocationTextField({locationInput, setlocationInput, retu
                 <Typography variant='body1' sx={{alignSelf:'center'}}>Waiting for autocomplete search results</Typography>
                 <LinearProgress></LinearProgress>
             </Stack>}
-            
 
             {/* use the autocomplete mui component */}
             <Autocomplete
@@ -46,7 +44,8 @@ export default function LocationTextField({locationInput, setlocationInput, retu
             <MapEmbed positions={[
                 {lat: selectedLat, 
                 lon: selectedLong}
-            ]}></MapEmbed>}    
+            ]}
+            mode={mode}></MapEmbed>}    
 
             {/* maybe remove this if many errors occur */}
             {error && alert('An error occured during autocomplete or location selection')}

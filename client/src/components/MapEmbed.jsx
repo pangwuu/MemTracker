@@ -26,7 +26,7 @@ function MapControllerChild({positions}) {
 
 }
 
-export default function MapEmbed({positions}) {
+export default function MapEmbed({positions, mode}) {
 
   // calculate central position
   
@@ -40,7 +40,7 @@ export default function MapEmbed({positions}) {
             scrollWheelZoom={true} 
             style={{ height: "50vh", width: "100%" }}
             >
-    <MapTileLayer/>
+    <MapTileLayer mode={mode}/>
     {positions.map((position, index) => 
     <Marker position={[position.lat, position.lon]} key={index}>
         <Popup>Memory location!</Popup>

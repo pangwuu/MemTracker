@@ -18,7 +18,7 @@ import Fab from '@mui/material/Fab';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from "react-router-dom";
 
-export default function AddMemory({session, onMemoryAdded}) {
+export default function AddMemory({session, onMemoryAdded, mode}) {
 
     const [memTitle, setMemTitle] = useState('');
     const [memDesc, setMemDesc] = useState('');
@@ -45,7 +45,7 @@ export default function AddMemory({session, onMemoryAdded}) {
                 if (locationInput.length <= 3) {
                     return;
                 }
-                console.log('here!')
+
                 const searchLink = `https://nominatim.openstreetmap.org/search?q=${locationInput}, Australia&format=jsonv2`
                 
                 var result = []
@@ -273,6 +273,7 @@ export default function AddMemory({session, onMemoryAdded}) {
         setSelectedLat={setSelectedLat}
         selectedLong={selectedLong}
         setSelectedLong={setSelectedLong}
+        mode={mode}
         />
 
         <Box className={styles.box}>

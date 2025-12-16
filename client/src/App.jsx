@@ -67,7 +67,10 @@ function App() {
     [mode],
   );
   
-  function handleView(newView) {
+  function handleView(event, newView) {
+    if (newView === null) {
+      return
+    }
     setCurrentView(newView);
   }
   
@@ -136,7 +139,7 @@ function App() {
           <Stack spacing={2} direction='row'>
 
           <Box>
-              <ToggleButtonGroup
+            <ToggleButtonGroup
             value={currentView}
             exclusive
             onChange={handleView}
@@ -147,27 +150,21 @@ function App() {
             }}
             size='small'
             color='inherit'
-          >
-            
-            {/* TODO: The entire button isn't clickable at the moment */}
-            <ToggleButton value={'account'} aria-label={Views.User}>
-              <NavLink to={'account'}>
+            >
+              {/* Buttons to switch different views */}
+              <ToggleButton value={'account'} aria-label={Views.User} component={NavLink} to="/account">
                 <PersonIcon/>
-              </NavLink>
-              
-            </ToggleButton>
-            <ToggleButton value={'/'} aria-label={Views.Memory}>
-              <NavLink to={'/'}>
+              </ToggleButton>
+
+              <ToggleButton value={'/'} aria-label={Views.User} component={NavLink} to="/">
                 <CollectionsIcon />
-              </NavLink>
-            </ToggleButton>
-            <ToggleButton value={'mapview'} aria-label={Views.Map}>
-              <NavLink to={'mapview'}>
+              </ToggleButton>
+
+              <ToggleButton value={'mapview'} aria-label={Views.User} component={NavLink} to="/mapview">
                 <MapIcon />
-              </NavLink>
+              </ToggleButton>            
               
-            </ToggleButton>
-              </ToggleButtonGroup>
+            </ToggleButtonGroup>
           </Box>
 
           {/* Dark mode toggle */}
@@ -195,9 +192,9 @@ function App() {
       <Routes>
         <Route path='/account' element={<AccountView session={session} />}/>
         <Route path='/' element={<MemoryCardPage memories={memories} setMemories={() => {setMemories}} session={session} />}/>
-        <Route path='/mapview' element={<MapView memories={memories}/>}></Route>
-        <Route path='/addMemory' element={<AddMemory session={session} onMemoryAdded={getMemories}></AddMemory>}></Route>
-        <Route path="/memoryDetailed/:memoryId" element={<MemoryDetailed session={session} memories={memories} onMemoryDelete={getMemories} />}></Route>
+        <Route path='/mapview' element={<MapView memories={memories} mode={mode}/>}></Route>
+        <Route path='/addMemory' element={<AddMemory session={session} onMemoryAdded={getMemories} mode={mode}></AddMemory>}></Route>
+        <Route path="/memoryDetailed/:memoryId" element={<MemoryDetailed session={session} memories={memories} onMemoryDelete={getMemories} mode={mode}/>}></Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

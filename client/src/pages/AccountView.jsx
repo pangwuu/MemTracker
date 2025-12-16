@@ -105,7 +105,7 @@ export default function AccountView({session}) {
             text = <Stack spacing={2} paddingTop={3}>
                 <Typography variant='h4'>Your account</Typography>
                 <Typography variant='body1'>Logged in as: {email}</Typography>
-                <Typography variant='h5'>You haven't set up a bio yet! Maybe go and create one!</Typography>
+                <Typography variant='h5'>You haven't set up a bio yet! Create one below!</Typography>
             </Stack>
             
         }

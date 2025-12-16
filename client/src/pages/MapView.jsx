@@ -5,7 +5,7 @@ import NewMemoryButton from "../components/NewMemoryLinkButton";
 import { Typography } from "@mui/material";
 
 
-export default function MapView({memories}) {
+export default function MapView({memories, mode}) {
     
     // be more defensive
     const points = (memories || []).map((memory) => ({
@@ -18,7 +18,7 @@ export default function MapView({memories}) {
     const validMemories = memories.filter(m => !isNaN(m.location_lat) && m.location_lat !== null && !isNaN(m.location_long) && m.location_long !== null)
 
     return <Stack padding={2} gap={2}>
-        <Container maxWidth="lg"  sx={{ overflow: 'hidden' }}>
+        <Container  sx={{ overflow: 'hidden' }}>
 
         <Typography variant="h4">Your memory map!</Typography>
 
@@ -26,8 +26,7 @@ export default function MapView({memories}) {
 
             {validPoints && validPoints.length > 0 && 
                 
-                <MemoryMapEmbed memories={validMemories}></MemoryMapEmbed>
-
+                <MemoryMapEmbed memories={validMemories} mode={mode}></MemoryMapEmbed>
     
             }
 

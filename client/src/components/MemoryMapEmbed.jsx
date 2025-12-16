@@ -4,9 +4,10 @@ import {useEffect} from 'react';
 import { MapContainer, useMap , Marker, Popup} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import * as geolib from 'geolib';
-import { Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { NavLink } from 'react-router';
 import MapTileLayer from './MapTileLayer';
+import PushPinIcon from '@mui/icons-material/PushPin';
 
 function MapControllerChild({positions}) {
   // calculated ideal zoom and fits the bounds automatically
@@ -29,7 +30,7 @@ function MapControllerChild({positions}) {
 
 }
 
-export default function MemoryMapEmbed({memories}) {
+export default function MemoryMapEmbed({memories, mode}) {
 
     // be more defensive
     const points = (memories || []).map((memory) => ({
@@ -50,13 +51,18 @@ export default function MemoryMapEmbed({memories}) {
             scrollWheelZoom={true} 
             style={{ height: "70dvh", width: "100%" }}
             >
-    <MapTileLayer/>
+    <MapTileLayer mode={mode}/>
     {memories.map((memory, index) => 
     <Marker position={[memory.location_lat, memory.location_long]} key={index}>
         <Popup>
-            <NavLink to={`/memoryDetailed/${memory.mem_id}`} style={{ textDecoration: 'none' }} key={index}>
-                <Typography variant='body2'>{memory.title}</Typography>
-            </NavLink>
+            <Stack spacing={1} direction='row'>
+            <PushPinIcon></PushPinIcon>
+            <Typography variant='h6' component={NavLink} to={`/memoryDetailed/${memory.mem_id}`} sx={{
+                textTransform: 'none'
+            }}>
+                {memory.title}</Typography>
+            </Stack>
+
         </Popup>
     </Marker>)}
 
