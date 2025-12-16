@@ -9,7 +9,8 @@ export default function NewMemoryButton() {
 
     return <Box alignSelf={'center'}>
                 <Paper>
-                    <Button onClick={() => navigate('/addMemory')} startIcon={<AddIcon/>} padding={2}>
+                    <Button 
+                     onClick={() => navigate('/addMemory')} startIcon={<AddIcon/>} padding={2}>
                         Add a new memory!
                     </Button>
                 </Paper>

@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import * as geolib from 'geolib';
 import { Typography } from '@mui/material';
 import { NavLink } from 'react-router';
-
+import MapTileLayer from './MapTileLayer';
 
 function MapControllerChild({positions}) {
   // calculated ideal zoom and fits the bounds automatically
@@ -50,10 +50,7 @@ export default function MemoryMapEmbed({memories}) {
             scrollWheelZoom={true} 
             style={{ height: "70dvh", width: "100%" }}
             >
-    <TileLayer
-      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    />
+    <MapTileLayer/>
     {memories.map((memory, index) => 
     <Marker position={[memory.location_lat, memory.location_long]} key={index}>
         <Popup>

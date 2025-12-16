@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Typography, Container, ImageListItem, ImageList, Stack, Button, Box, Chip, Card, Paper} from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -12,7 +13,7 @@ import MapEmbed from "../components/MapEmbed";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-export default function MemoryDetailed({ memories }) {
+export default function MemoryDetailed({ session, memories, onMemoryDelete }) {
 
     const [imageUrls, setImageUrls] = useState([])
     const { memoryId } = useParams();
@@ -20,6 +21,41 @@ export default function MemoryDetailed({ memories }) {
     let navigate = useNavigate();
 
     const memory = memories && memories.find(m => m.mem_id == memoryId);
+
+    async function deleteMemory() {
+        // delete images first
+        const {user} = session
+
+        const memoryToDelete = memories && memories.find(m => m.mem_id == memoryId)
+        const linksToDelete = memoryToDelete.image_urls
+        
+        // if there are images delete them
+        if (linksToDelete && linksToDelete.length > 0) {
+            await supabase.storage.from('memory-images').remove(linksToDelete)
+        }
+
+        // Delete the row from the memories column 
+        const { error, count } = await supabase
+                .from('memories')
+                .delete({ count: 'exact' }) 
+                .eq('mem_id', memoryId)
+                .eq('user_id', user.id);
+
+        if (error) {
+            alert(`An error occured during deletion ${error}`)
+        }
+        else if (count === 0) {
+            console.warn("Command ran, but 0 rows were deleted.");
+            alert("Could not delete memory. You might not have permission, or it no longer exists.");
+        }
+        else {
+            alert('Memory deleted successfully!')
+            // nav and force a reload
+            await onMemoryDelete()
+            navigate(-1)
+        }
+        
+    }
 
     useEffect(() => {
         if (memory === undefined) {
@@ -153,17 +189,34 @@ export default function MemoryDetailed({ memories }) {
             {memory.location_plain_string && memory.location_lat == null || !memory.location_long == null && <Typography variant="h6">Failed to provide a map embed</Typography>}
 
             <Box alignSelf={"center"}>
-                <Paper variant="outlined">
-                <Button onClick={() => navigate(-1)}>
-                    <Stack direction={'row'} spacing={1}>
-                        <ArrowBackIcon/>
-                        <Typography variant="body1">
-                            Back to all memories
-                        </Typography>
-                    </Stack>
+                <Stack direction='row' spacing={3}>
+                    <Paper variant="outlined">
+                    <Button onClick={() => navigate(-1)}>
+                        <Stack direction={'row'} spacing={1}>
+                            <ArrowBackIcon/>
+                            <Typography variant="body1">
+                                Back to all memories
+                            </Typography>
+                        </Stack>
 
-                </Button>
-                </Paper>
+                    </Button>
+                    </Paper>
+
+                    <Paper variant="outlined">
+                    <Button color="error"
+                    // replace w delete function
+                    onClick={() => deleteMemory()}>
+                        <Stack direction={'row'} spacing={1}>
+                            <DeleteIcon/>
+                            <Typography variant="body1">
+                                Delete this memory
+                            </Typography>
+                        </Stack>
+
+                    </Button>
+                    </Paper>                    
+                </Stack>
+
 
             </Box>
 

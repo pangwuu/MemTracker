@@ -214,8 +214,11 @@ export default function AddMemory({session, onMemoryAdded}) {
             setLocationValue(null)
             setSelectedLat(null)
             setSelectedLong(null)
+            setMemDate(null)
 
-            
+            navigate(-1)
+
+
         }
 
         setUploading(false)
@@ -247,12 +250,15 @@ export default function AddMemory({session, onMemoryAdded}) {
 
         {memoryDate()}
 
+        {/* Image upload component*/}
+
         <UploadAndDisplayImages
             images={selectedImages}
             onImageUpload={updateImages}
             onClear={clearImages}
         />
 
+        {/* Autocomplete field component*/}
         <LocationTextField
         locationInput={locationInput}
         setlocationInput={setlocationInput}

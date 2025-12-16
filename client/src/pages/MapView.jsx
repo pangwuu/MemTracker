@@ -18,11 +18,19 @@ export default function MapView({memories}) {
     const validPoints = points.filter(p => !isNaN(p.lat) && !isNaN(p.lon));
     const validMemories = memories.filter(m => !isNaN(m.location_lat) && m.location_lat !== null && !isNaN(m.location_long) && m.location_long !== null)
 
-    return <Container maxWidth="lg"  sx={{ overflow: 'hidden' }}>
+    return <Stack padding={2} gap={2}>
+        <Container maxWidth="lg"  sx={{ overflow: 'hidden' }}>
+
+        <Typography variant="h4">Your memory map!</Typography>
+
         <Stack padding={2} gap={2} alignItems={'center'}>
-            
+
             {validPoints && validPoints.length > 0 && 
-            <MemoryMapEmbed memories={validMemories}></MemoryMapEmbed>}
+                
+                <MemoryMapEmbed memories={validMemories}></MemoryMapEmbed>
+
+    
+            }
 
             {!validPoints || validPoints.length == 0 && memories && memories.length > 0 && <Typography variant="h5">Loading...</Typography>}
             {(!validPoints || validPoints.length == 0) && (!memories || memories.length == 0) && <Typography variant="h5">No memories yet!</Typography>}
@@ -32,6 +40,8 @@ export default function MapView({memories}) {
         </Stack>
 
     </Container>
+    </Stack>
+    
     
     
 }

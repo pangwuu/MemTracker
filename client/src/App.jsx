@@ -1,5 +1,4 @@
 import './App.css';
-import ViewSwitcher from './components/ViewSwitcher';
 import LoginPage from './pages/LoginPage';
 import MapView from './pages/MapView';
 import MemoryCardPage from './pages/MemoryCardPage'
@@ -122,9 +121,11 @@ function App() {
           size='small'
           color='secondary'
         >
+          
+          {/* TODO: The entire button isn't clickable at the moment */}
           <ToggleButton value={'account'} aria-label={Views.User}>
             <NavLink to={'account'}>
-              <PersonIcon />
+              <PersonIcon/>
             </NavLink>
             
           </ToggleButton>
@@ -151,13 +152,13 @@ function App() {
     <BrowserRouter>
       {appBar()}
       
-      {/* Deinf routes around here - to each page we may add! */}
+      {/* Define routes around here - to each page we may add! */}
       <Routes>
         <Route path='/account' element={<AccountView session={session} />}/>
         <Route path='/' element={<MemoryCardPage memories={memories} setMemories={() => {setMemories}} session={session} />}/>
         <Route path='/mapview' element={<MapView memories={memories}/>}></Route>
         <Route path='/addMemory' element={<AddMemory session={session} onMemoryAdded={getMemories}></AddMemory>}></Route>
-        <Route path="/memoryDetailed/:memoryId" element={<MemoryDetailed memories={memories} />}></Route>
+        <Route path="/memoryDetailed/:memoryId" element={<MemoryDetailed session={session} memories={memories} onMemoryDelete={getMemories} />}></Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

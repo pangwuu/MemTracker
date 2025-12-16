@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { MapContainer, TileLayer, useMap , Marker, Popup, useMapEvents} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import * as geolib from 'geolib';
+import MapTileLayer from './MapTileLayer';
 
 
 function MapControllerChild({positions}) {
@@ -39,10 +40,7 @@ export default function MapEmbed({positions}) {
             scrollWheelZoom={true} 
             style={{ height: "50vh", width: "100%" }}
             >
-    <TileLayer
-      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    />
+    <MapTileLayer/>
     {positions.map((position, index) => 
     <Marker position={[position.lat, position.lon]} key={index}>
         <Popup>Memory location!</Popup>
