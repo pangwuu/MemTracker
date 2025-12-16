@@ -5,7 +5,6 @@
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
-import { useEffect, useState } from 'react';
 import MapEmbed from './MapEmbed';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';

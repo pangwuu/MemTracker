@@ -4,9 +4,12 @@ import MapView from './pages/MapView';
 import MemoryCardPage from './pages/MemoryCardPage'
 import AccountView from './pages/AccountView';
 import AddMemory from './pages/AddMemory.jsx';
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo, createContext } from 'react';
+import IconButton from '@mui/material/IconButton';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
-import { BrowserRouter, Routes, Route, Navigate, NavLink, useNavigate, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, NavLink } from "react-router-dom";
 import PersonIcon from '@mui/icons-material/Person';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import MapIcon from '@mui/icons-material/Map';
@@ -15,7 +18,6 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 import { supabase } from './supabaseClient'
 import {Views} from './consts.ts'
-import Container from '@mui/material/Container';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -24,18 +26,12 @@ import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import MemoryDetailed from './pages/MemoryDetailed.jsx';
 import { Button } from '@mui/material';
 
 // Define your custom font family
-const customFont = "'Roboto', sans-serif"; // Replace 'Roboto' with your chosen font
-
-const theme = createTheme({
-  typography: {
-    fontFamily: customFont,
-  },
-});
+const customFont = "'Roboto', sans-serif"; 
+export const ColorModeContext = createContext({ toggleColorMode: () => {} }); // for dark mode
 
 function App() {
 
@@ -44,11 +40,38 @@ function App() {
   const [session, setSession] = useState(null);
   const [memories, setMemories] = useState([]);
   const [loadingMemories, setLoadingMemories] = useState(false);
+
+  const [mode, setMode] = useState('light');  
+
+  // toggle between the two
+  const colorMode = useMemo(
+    () => ({
+      toggleColorMode: () => {
+        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+      },
+    }),
+    [],
+  );  
+
+  // change mode
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode, // 'light' or 'dark'
+        },
+        typography: {
+          fontFamily: customFont,
+        },
+      }),
+    [mode],
+  );
   
   function handleView(newView) {
     setCurrentView(newView);
   }
   
+  // connect and get session token
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
@@ -94,6 +117,7 @@ function App() {
         </ThemeProvider>;
     }
 
+  // for the bar at the top - consists of the bar, clickable logo, dark mode toggler, and switch
   const appBar = () => {
     return <AppBar position='static'
         color='inherit'
@@ -103,51 +127,66 @@ function App() {
         <Toolbar>
           <Box>
             <Button href="/" color='black' sx={{ textTransform: 'none' }}>
-              <Typography variant='h5'>Our memories!</Typography>
+              <Typography variant='h5'>MemTracker</Typography>
             </Button>
 
           </Box>
           <Box sx={{ flexGrow: 1 }} />
+
+          <Stack spacing={2} direction='row'>
+
           <Box>
-            <ToggleButtonGroup
-          value={currentView}
-          exclusive
-          onChange={handleView}
-          aria-label="page view"
-          sx={{
-            backgroundColor: 'background.paper', 
-            borderRadius: 1
-          }}
-          size='small'
-          color='secondary'
-        >
-          
-          {/* TODO: The entire button isn't clickable at the moment */}
-          <ToggleButton value={'account'} aria-label={Views.User}>
-            <NavLink to={'account'}>
-              <PersonIcon/>
-            </NavLink>
+              <ToggleButtonGroup
+            value={currentView}
+            exclusive
+            onChange={handleView}
+            aria-label="page view"
+            sx={{
+              backgroundColor: 'background.paper', 
+              borderRadius: 1
+            }}
+            size='small'
+            color='inherit'
+          >
             
-          </ToggleButton>
-          <ToggleButton value={'/'} aria-label={Views.Memory}>
-            <NavLink to={'/'}>
-              <CollectionsIcon />
-            </NavLink>
-          </ToggleButton>
-          <ToggleButton value={'mapview'} aria-label={Views.Map}>
-            <NavLink to={'mapview'}>
-              <MapIcon />
-            </NavLink>
-            
-          </ToggleButton>
-            </ToggleButtonGroup>
+            {/* TODO: The entire button isn't clickable at the moment */}
+            <ToggleButton value={'account'} aria-label={Views.User}>
+              <NavLink to={'account'}>
+                <PersonIcon/>
+              </NavLink>
+              
+            </ToggleButton>
+            <ToggleButton value={'/'} aria-label={Views.Memory}>
+              <NavLink to={'/'}>
+                <CollectionsIcon />
+              </NavLink>
+            </ToggleButton>
+            <ToggleButton value={'mapview'} aria-label={Views.Map}>
+              <NavLink to={'mapview'}>
+                <MapIcon />
+              </NavLink>
+              
+            </ToggleButton>
+              </ToggleButtonGroup>
           </Box>
+
+          {/* Dark mode toggle */}
+          <IconButton onClick={colorMode.toggleColorMode} color="inherit">
+            {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>          
+
+          </Stack>
+
+          
           </Toolbar>
         </AppBar>    
   }
   
   return <ThemeProvider
-  theme={theme}>
+  theme={theme}
+   defaultMode="dark"
+  noSsr
+  >
     <CssBaseline/> 
     <BrowserRouter>
       {appBar()}

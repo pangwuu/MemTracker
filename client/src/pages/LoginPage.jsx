@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import LockIcon from '@mui/icons-material/Lock';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
-import { FormControl } from '@mui/material';
 
 import styles from '../styles/LoginPage.module.css'
 import { supabase } from '../supabaseClient';

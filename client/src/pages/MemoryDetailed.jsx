@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Typography, Container, ImageListItem, ImageList, Stack, Button, Box, Chip, Card, Paper} from "@mui/material";
+import { Typography, Container, ImageListItem, ImageList, Stack, Button, Box, Chip, Paper} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import LocationPinIcon from '@mui/icons-material/LocationPin';

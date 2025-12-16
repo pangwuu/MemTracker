@@ -1,4 +1,3 @@
-import * as React from 'react';
 import PersonIcon from '@mui/icons-material/Person';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import MapIcon from '@mui/icons-material/Map';

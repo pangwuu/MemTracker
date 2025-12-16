@@ -1,8 +1,7 @@
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
-import MemoryCard from '../components/MemoryCard';
-import { Form, NavLink, useNavigate } from 'react-router';
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography, InputAdornment } from '@mui/material';
+import { useNavigate } from 'react-router';
+import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography, InputAdornment } from '@mui/material';
 import NewMemoryButton from '../components/NewMemoryLinkButton';
 import GridView from '../components/GridView';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
@@ -10,7 +9,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SortIcon from '@mui/icons-material/Sort';
 import SearchIcon from '@mui/icons-material/Search';
 import Fab from '@mui/material/Fab';
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 
 export default function MemoryCardPage({session, memories}) {
 

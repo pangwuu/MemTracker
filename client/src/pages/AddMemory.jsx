@@ -12,7 +12,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import AddIcon from '@mui/icons-material/Add';
-
 import { supabase } from '../supabaseClient'
 import Container from '@mui/material/Container';
 import Fab from '@mui/material/Fab';

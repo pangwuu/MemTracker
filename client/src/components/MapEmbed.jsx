@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import { MapContainer, TileLayer, useMap , Marker, Popup, useMapEvents} from 'react-leaflet'
+import {useEffect} from 'react';
+import { MapContainer, useMap , Marker, Popup} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import * as geolib from 'geolib';
 import MapTileLayer from './MapTileLayer';

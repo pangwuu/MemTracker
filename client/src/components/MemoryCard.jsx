@@ -1,7 +1,6 @@
 // a small memory card to be displayed as a grid on the page
-import { useState, useEffect, memo } from 'react';
+import { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
-import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -36,7 +35,6 @@ export default function MemoryCard({memory}) {
                 return parts[1]; 
             }
             
-            // console.warn('Could not extract relative path from:', path);
             return path;
         };
 

@@ -1,5 +1,4 @@
 import Stack from "@mui/material/Stack";
-import MapEmbed from "../components/MapEmbed";
 import MemoryMapEmbed from "../components/MemoryMapEmbed";
 import Container from "@mui/material/Container"
 import NewMemoryButton from "../components/NewMemoryLinkButton";
