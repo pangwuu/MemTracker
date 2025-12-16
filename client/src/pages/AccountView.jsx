@@ -114,7 +114,7 @@ export default function AccountView({session}) {
             <Typography variant='h4'>Your account</Typography>
                 <Typography variant='body1'>Logged in as: {email}</Typography>
                 <Typography variant='h5'>Your bio:</Typography>
-                <Typography variant='body1'>{bio}</Typography>
+                <Typography variant='body1' style={{ wordWrap: "break-word" }}>{bio}</Typography>
             </Stack>
         }
 

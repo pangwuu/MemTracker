@@ -181,7 +181,7 @@ export default function MemoryCardPage({session, memories}) {
         {displayedMemories.length > 0 &&
         GridView(displayedMemories)}
 
-        {displayedMemories.length == 0 && <Box alignSelf={'center'}>
+        {displayedMemories.length == 0 && searchTerm.length !== 0 && sortMethod.length !== 0 && <Box alignSelf={'center'}>
             <Typography variant='h5'>No memories match your search</Typography>
         </Box>
         }        
