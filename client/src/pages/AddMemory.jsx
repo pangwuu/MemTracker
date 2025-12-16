@@ -172,8 +172,8 @@ export default function AddMemory({session, onMemoryAdded}) {
     }
 
     async function addMemory() {
-        if (!memDate || !memTitle) {
-            alert("Please add a title and date!");
+        if (!memDate || !memTitle || !locationValue) {
+            alert("Please add a title, date and location!");
             return;
         }        
 

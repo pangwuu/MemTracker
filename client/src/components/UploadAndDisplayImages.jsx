@@ -15,8 +15,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function UploadAndDisplayImages({images, onImageUpload, onClear}) {
 
-  // Return the JSX for rendering
   return (<Stack spacing={2}>
+
+    {/*image upload button */}
 
     <Box alignSelf={'center'}>
         <Card variant='outlined'>
@@ -32,17 +33,20 @@ export default function UploadAndDisplayImages({images, onImageUpload, onClear})
                 Upload images of your memory
                 <input
                     type="file"
-                    accept="image/*"
-                    name="myImage"
+                    accept="image/*" 
+                    name="media-files[]"
+                    id="media-upload" 
                     hidden
+                    multiple
                     onChange={(event) => {
-                    onImageUpload(event.target.files[0])
+                        onImageUpload(event.target.files[0])
                     }}
                 />
             </Button>
         </Card>
     </Box>
-        
+
+    {/*display in a MUI imagelist if there are images*/}
           {
             (images.length !== 0) && 
             <Stack>
@@ -88,6 +92,8 @@ export default function UploadAndDisplayImages({images, onImageUpload, onClear})
 
             ))}
             </ImageList> 
+
+            {/*button to clear images*/}
 
             <Box alignSelf={'center'}>
                 <Card variant='outlined'>
