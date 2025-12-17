@@ -49,7 +49,6 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
             alert("Could not delete memory. You might not have permission, or it no longer exists.");
         }
         else {
-            alert('Memory deleted successfully!')
             // nav and force a reload
             await onMemoryDelete()
             navigate(-1)

@@ -17,6 +17,7 @@ import Container from '@mui/material/Container';
 import Fab from '@mui/material/Fab';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from "react-router-dom";
+import { CircularProgress } from '@mui/material';
 
 export default function AddMemory({session, onMemoryAdded, mode}) {
 
@@ -39,6 +40,8 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
 
     // used to autofill the text field and get user to select
     useEffect(() => {
+
+        let active = true;
 
         const timeoutId = setTimeout(() => {
             const fetchPlaces = async () => {
@@ -74,7 +77,10 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
 
         }, 200)
         
-        return () => clearTimeout(timeoutId)
+        return () => {
+            active = false
+            clearTimeout(timeoutId)
+        }
 
     }, [locationInput])
 
@@ -221,7 +227,6 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
         }
 
         setUploading(false)
-        alert('Memory added!')
 
     }
 
@@ -276,7 +281,7 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
         mode={mode}
         />
 
-        <Box className={styles.box}>
+        <Box className={styles.box} gap={2}>
             <Paper elevation={2} variant="outlined">
                 <Button
                 size='large'
@@ -289,6 +294,7 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
                 Add memory!
                 </Button>
             </Paper>
+            {uploading && <CircularProgress />}
         </Box>
 
     </Stack>

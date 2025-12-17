@@ -2,8 +2,9 @@ import {useEffect} from 'react';
 import { MapContainer, useMap , Marker, Popup} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import * as geolib from 'geolib';
+import markerIconPng from "../map-pin-icon.png"
 import MapTileLayer from './MapTileLayer';
-
+import {Icon} from 'leaflet'
 
 function MapControllerChild({positions}) {
   // calculated ideal zoom and fits the bounds automatically
@@ -42,8 +43,8 @@ export default function MapEmbed({positions, mode}) {
             >
     <MapTileLayer mode={mode}/>
     {positions.map((position, index) => 
-    <Marker position={[position.lat, position.lon]} key={index}>
-        <Popup>Memory location!</Popup>
+    <Marker position={[position.lat, position.lon]} key={index} icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 0]})}>
+        <Popup >Memory location!</Popup>
     </Marker>)}
 
     <MapControllerChild positions={positions}></MapControllerChild>

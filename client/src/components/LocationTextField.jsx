@@ -6,6 +6,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import MapEmbed from './MapEmbed';
+import { Alert } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 
@@ -21,6 +22,7 @@ export default function LocationTextField({locationInput, setlocationInput, retu
 
             {/* use the autocomplete mui component */}
             <Autocomplete
+                filterOptions={(x) => x} // to prevent some filtering? idk
                 options={returnedResults}
                 renderInput={(params) => <TextField {...params} label="Memory location" />}
                 onInputChange={(e, newInputValue) => {
@@ -47,8 +49,12 @@ export default function LocationTextField({locationInput, setlocationInput, retu
             ]}
             mode={mode}></MapEmbed>}    
 
-            {/* maybe remove this if many errors occur */}
-            {error && alert('An error occured during autocomplete or location selection')}
+            {/* Error Handling */}
+            {error && (
+                <Alert severity="error" onClose={() => setError(false)}>
+                    An error occurred during autocomplete or location selection
+                </Alert>
+            )}
 
         </Stack>
 

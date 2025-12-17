@@ -2,12 +2,15 @@
 
 import {useEffect} from 'react';
 import { MapContainer, useMap , Marker, Popup} from 'react-leaflet'
+import {Icon} from 'leaflet'
 import 'leaflet/dist/leaflet.css';
 import * as geolib from 'geolib';
 import { Stack, Typography } from '@mui/material';
 import { NavLink } from 'react-router';
 import MapTileLayer from './MapTileLayer';
 import PushPinIcon from '@mui/icons-material/PushPin';
+import MapPopUp from './MapPopup';
+import markerIconPng from "../map-pin-icon.png"
 
 function MapControllerChild({positions}) {
   // calculated ideal zoom and fits the bounds automatically
@@ -46,27 +49,20 @@ export default function MemoryMapEmbed({memories, mode}) {
     const initialCenter = [center.latitude, center.longitude];
     
     return <MapContainer
+    
     center={initialCenter} 
             zoom={13} 
             scrollWheelZoom={true} 
             style={{ height: "70dvh", width: "100%" }}
             >
     <MapTileLayer mode={mode}/>
-    {memories.map((memory, index) => 
-    <Marker position={[memory.location_lat, memory.location_long]} key={index}>
-        <Popup>
-            <Stack spacing={1} direction='row'>
-            <PushPinIcon></PushPinIcon>
-            <Typography variant='h6' component={NavLink} to={`/memoryDetailed/${memory.mem_id}`} sx={{
-                textTransform: 'none'
-            }}>
-                {memory.title}</Typography>
-            </Stack>
-
-        </Popup>
+    {memories.map((memory, index) =>
+    <Marker position={[memory.location_lat, memory.location_long]} key={index} icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 0]})}>
+        {MapPopUp(memory)}
     </Marker>)}
 
     <MapControllerChild positions={validPoints}></MapControllerChild>
 
   </MapContainer>
 }
+
