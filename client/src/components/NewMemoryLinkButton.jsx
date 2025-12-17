@@ -7,7 +7,7 @@ export default function NewMemoryButton() {
     let navigate = useNavigate();
 
     return <Box alignSelf={'center'}>
-                <Paper>
+                <Paper variant='outlined'>
                     <Button 
                      onClick={() => navigate('/addMemory')} startIcon={<AddIcon/>} padding={2}>
                         Add a new memory!

@@ -7,5 +7,3 @@ if (!supabaseUrl || !supabasePublishableKey) {
   console.error('Supabase keys are missing! Check your .env file.')
 }
 export const supabase = createClient(supabaseUrl, supabasePublishableKey)
-
-console.log('Connecting to supabase complete!')

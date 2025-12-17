@@ -33,8 +33,6 @@ export default function MemoryCardPage({session, memories}) {
         // calculate what we display based upon sorting method, ascending/descending method, and any searches
         let processedMemories = [...(memories || [])];
 
-        console.log(processedMemories)
-
         const cleanSearch = searchTerm.trim().toLowerCase();
 
         // handle search term
@@ -77,9 +75,9 @@ export default function MemoryCardPage({session, memories}) {
 
         }
         else if (sortMethod == 'Location') {
-            matchesSortSearch = matchesSearchTerm.sort((mem1, mem2) => {
-                const locString1 = mem1.location_plain_string.toLowerCase().trim()
-                const locString2 = mem2.location_plain_string.toLowerCase().trim()
+            matchesSortSearch = matchesSearchTerm.sort((m1, m2) => {
+                const locString1 = m1.location_plain_string.toLowerCase().trim()
+                const locString2 = m2.location_plain_string.toLowerCase().trim()
                 if (locString1 < locString2) {
                     return -1
                 }
@@ -141,7 +139,6 @@ export default function MemoryCardPage({session, memories}) {
 
                 {!ascendingSort && 
                 <Fab onClick={handleAscendingDescendingSortChange}><ArrowDropDownIcon/></Fab>}
-                
             </Stack>
 
             {/* searchbar */}
@@ -191,7 +188,7 @@ export default function MemoryCardPage({session, memories}) {
         </Box>
         }
 
-        <NewMemoryButton></NewMemoryButton>
+        <NewMemoryButton/>
 
         </Stack>
 

@@ -132,7 +132,7 @@ export default function AccountView({session}) {
         value={tempBio}
         onChange={(e) => {setTempBio(e.target.value)}}
         />
-        <Box className={styles.box}>
+        <Box alignSelf={'center'}>
             <Paper elevation={2} variant='outlined'>
 
                 <Button
@@ -160,7 +160,7 @@ export default function AccountView({session}) {
     <Stack spacing={2}>
         {currentBio()}
         {updateBioComps()}
-        <Box className={styles.box}>
+        <Box alignSelf={'center'}>
             <Paper elevation={2} variant="outlined">
                 <Button
                 sx={{
