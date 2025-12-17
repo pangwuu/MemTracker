@@ -84,22 +84,35 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
 
     }, [locationInput])
 
-    const updateImages = (newImage) => {
+    const updateImages = (newImages) => {
 
-        if (!newImage) {
+        if (!newImages) {
+            return;
+        }
+        if (newImages.length == 0) {
             return;
         }
 
-        const newImageURL = URL.createObjectURL(newImage);
+        let i;
+        const uploadedImages = []
 
-        const newImageItem = {
-            url: newImageURL,
-            image: newImage
+
+        for (i = 0; i < newImages.length; i++) {
+            const newImage = newImages[i]
+            const newImageURL = URL.createObjectURL(newImage);
+
+            const newImageItem = {
+                url: newImageURL,
+                image: newImage
+            }
+
+            uploadedImages.push(newImageItem)
+
         }
+        
+        
+        setSelectedImages((prevImages) => [...prevImages, ...uploadedImages]);
 
-        const newSelectedImages = selectedImages.slice()
-        newSelectedImages.push(newImageItem)
-        setSelectedImages(newSelectedImages)
 
     }
 

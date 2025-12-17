@@ -39,7 +39,7 @@ export default function UploadAndDisplayImages({images, onImageUpload, onClear})
                     hidden
                     multiple
                     onChange={(event) => {
-                        onImageUpload(event.target.files[0])
+                        onImageUpload(event.target.files)
                     }}
                 />
             </Button>
