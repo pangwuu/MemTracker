@@ -17,7 +17,7 @@ import Container from '@mui/material/Container';
 import Fab from '@mui/material/Fab';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from "react-router-dom";
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, LinearProgress } from '@mui/material';
 
 export default function AddMemory({session, onMemoryAdded, mode}) {
 
@@ -35,6 +35,7 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
     const [selectedLong, setSelectedLong] = useState(null);
 
     const [uploading, setUploading] = useState(false);
+    const [uploadingImages, setUploadingImages] = useState(false)
 
     let navigate = useNavigate();
 
@@ -84,6 +85,7 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
 
     }, [locationInput])
 
+    // used to update image links when new ones are added
     const updateImages = (newImages) => {
 
         if (!newImages) {
@@ -95,7 +97,6 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
 
         let i;
         const uploadedImages = []
-
 
         for (i = 0; i < newImages.length; i++) {
             const newImage = newImages[i]
@@ -157,12 +158,11 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
     async function uploadImages() {
         // function to upload all images in selectedImages
 
-        const uploadedUrls = [];
+        setUploadingImages(true)
 
-        let i;
-
-        for (i = 0; i < selectedImages.length; i++) {
-            const imageItem = selectedImages[i]
+        // for concurrency - create an array of promises which are their own uploads
+        const uploadedPromises = selectedImages.map(async (imageItem) => {
+            
             const imageFile = imageItem.image
 
             // Generate unique filename + url so it can be identified
@@ -178,14 +178,22 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
                 });
 
             if (error) {
+                setUploadingImages(false)
                 throw error;
             }
 
-            uploadedUrls.push(filePath);
+            return filePath
+        })
 
-        }
+        // await in parallel - AFTER loop
+        const results = await Promise.allSettled(uploadedPromises)
+        
+        const uploadedUrls = results
+        .filter(result => result.status === 'fulfilled')
+        .map(result => result.value);        
 
-        return uploadedUrls;
+        setUploadingImages(false)
+        return uploadedUrls
 
     }
 
@@ -268,7 +276,6 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
         {memoryDate()}
 
         {/* Image upload component*/}
-
         <UploadAndDisplayImages
             images={selectedImages}
             onImageUpload={updateImages}
