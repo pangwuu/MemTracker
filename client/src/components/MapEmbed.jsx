@@ -45,7 +45,7 @@ export default function MapEmbed({positions, mode}) {
             >
     <MapTileLayer mode={mode}/>
     {positions.map((position, index) => 
-    <Marker position={[position.lat, position.lon]} key={index} icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 0]})}>
+    <Marker position={[position.lat, position.lon]} key={index} icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]})}>
         <Popup >Memory location!</Popup>
     </Marker>)}
 

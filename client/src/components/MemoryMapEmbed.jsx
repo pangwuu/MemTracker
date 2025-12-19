@@ -56,7 +56,7 @@ export default function MemoryMapEmbed({memories, mode}) {
             >
     <MapTileLayer mode={mode}/>
     {memories.map((memory, index) =>
-    <Marker position={[memory.location_lat, memory.location_long]} key={index} icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 0]})}>
+    <Marker position={[memory.location_lat, memory.location_long]} key={index} icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]})}>
         {MapPopUp(memory)}
     </Marker>)}
 
