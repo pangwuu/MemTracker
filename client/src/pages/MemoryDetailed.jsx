@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Typography, Container, ImageListItem, ImageList, Stack, Button, Box, Chip, Paper} from "@mui/material";
+import { Typography, Container, ImageListItem, ImageList, Stack, Button, Box, Chip, Paper, CircularProgress} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
@@ -16,6 +16,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 export default function MemoryDetailed({ session, memories, onMemoryDelete, mode }) {
 
     const [imageUrls, setImageUrls] = useState([])
+    const [loadingImages, setLoadingImages] = useState(false)
     const { memoryId } = useParams();
 
     let navigate = useNavigate();
@@ -64,37 +65,56 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
 
     // gets us all images in parallel
     useEffect(() => {
-
-        if (!memory || !memory.image_urls || memory.image_urls.length === 0) return;
+        if (!memory?.image_urls || memory.image_urls.length === 0) {
+            setImageUrls([]);
+            return;
+        }
 
         let active = true;
+        setLoadingImages(true);
+        
+        // Keep track of URLs so we can clean them up later
+        let generatedUrls = [];
 
         const downloadAllImages = async () => {
-            
-            const downloadPromises = memory.image_urls.map(async (path) => {
+            try {
+                const downloadPromises = memory.image_urls.map(async (path) => {
+                    const { data, error } = await supabase.storage
+                        .from('memory-images')
+                        .download(path);
 
-                const { data, error } = await supabase.storage
-                    .from('memory-images')
-                    .download(path);
+                    if (error) {
+                        console.error('Error downloading:', path, error);
+                        return null;
+                    }
+                    
+                    const url = URL.createObjectURL(data);
+                    generatedUrls.push(url); // Track for cleanup
+                    return url;
+                });
 
-                if (error) {
-                    console.error('Error downloading:', path, error);
-                    return null;
+                const results = await Promise.all(downloadPromises);
+
+                if (active) {
+                    const successfulImages = results.filter(url => url !== null);
+                    setImageUrls(successfulImages);
                 }
-                
-                return URL.createObjectURL(data);
-            });
-
-            const results = await Promise.all(downloadPromises);
-
-            if (active) {
-                const successfulImages = results.filter(url => url !== null);
-                setImageUrls(successfulImages);
+            } catch (err) {
+                console.error("Failed to download images", err);
+            } finally {
+                // Move this INSIDE the async flow or at the end of the logic
+                if (active) setLoadingImages(false);
             }
         };
 
         downloadAllImages();
 
+        // CLEANUP FUNCTION
+        return () => {
+            active = false;
+            // Revoke all created URLs to free up browser memory
+            generatedUrls.forEach(url => URL.revokeObjectURL(url));
+        };
     }, [memory]);
 
 
@@ -166,7 +186,19 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
                 </ImageList>            
             </>
             }
-            {!imageUrls || imageUrls.length == 0 && <Typography variant="h4">No photos of this memory!</Typography>}
+            
+            {/* Conditionally load images depending on if the loading state is active AND if there are no image urls */}
+            {loadingImages && (
+                <Stack spacing={2} alignItems="center" direction='row'>
+                    <Typography variant="h4">Loading images, please wait</Typography>
+                    <CircularProgress />
+                </Stack>
+            )}
+
+            {!loadingImages && imageUrls.length === 0 && (
+                <Typography variant="h4">No photos of this memory!</Typography>
+            )}
+       
 
             {memory.description !== null && <>
             <Typography variant="h5">The story</Typography>
@@ -188,7 +220,7 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
                     </MapEmbed>}
             
             {/* Only render this message if there is a location but it failed to render - otherwise just the first error message is enough */}
-            {memory.location_plain_string && memory.location_lat == null || !memory.location_long == null && <Typography variant="h6">Failed to provide a map embed</Typography>}
+            {memory.location_plain_string && (!memory.location_lat || !memory.location_long) == null && <Typography variant="h6">Failed to provide a map embed</Typography>}
 
             <Box alignSelf={"center"}>
                 <Stack direction='row' spacing={3}>

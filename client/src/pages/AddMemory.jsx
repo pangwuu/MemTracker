@@ -98,6 +98,7 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
         let i;
         const uploadedImages = []
 
+        // TODO: change to parallel uploads w promises
         for (i = 0; i < newImages.length; i++) {
             const newImage = newImages[i]
             const newImageURL = URL.createObjectURL(newImage);
