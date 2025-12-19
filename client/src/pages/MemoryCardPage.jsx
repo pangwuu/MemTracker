@@ -178,13 +178,13 @@ export default function MemoryCardPage({session, memories, loadingMemories}) {
 
         {sortSelect()}
 
-        {loadingMemories && <Box alignSelf={'center'}>
-            <Stack>
+        {
+        loadingMemories && <Box alignSelf={'center'}>
+            <Stack alignSelf={'center'}>
                 <Typography variant='h5'>Loading your memories</Typography>
                 <CircularProgress></CircularProgress>
             </Stack>
         </Box>
-
         }
 
         {displayedMemories.length > 0 && !loadingMemories && GridView(displayedMemories)}
