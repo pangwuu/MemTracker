@@ -1,6 +1,12 @@
-// Source - https://stackoverflow.com/a
-// Posted by ABHIJEET KHIRE, modified by community. See post 'Timeline' for change history
-// Retrieved 2025-12-10, License - CC BY-SA 4.0
+
+
+/**
+ * Modified to use MUI components and triggers different changes when images are uploaded.
+ * 
+ * // Source - https://stackoverflow.com/a
+ * Posted by ABHIJEET KHIRE, modified by community. See post 'Timeline' for change history
+ * Retrieved 2025-12-10, License - CC BY-SA 4.0
+ */
 
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'

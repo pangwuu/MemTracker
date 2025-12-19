@@ -1,3 +1,5 @@
+/* a responsive gridview that shows a variety of clickable memory cards */
+
 import { NavLink } from "react-router";
 import MemoryCard from "./MemoryCard";
 

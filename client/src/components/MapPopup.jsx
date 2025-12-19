@@ -1,3 +1,7 @@
+/**
+ * A popup on the MapView allowing users to navigate back to a certain memory while including custom icons
+ */
+
 import { Popup } from 'react-leaflet';
 import { Stack, Typography } from '@mui/material';
 import { NavLink } from 'react-router';

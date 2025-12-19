@@ -1,3 +1,7 @@
+/**
+ * Page to allow users to update their bio and/or logout
+ */
+
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabaseClient'
 
@@ -7,7 +11,6 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box'
-import styles from '../styles/AccountView.module.css'
 import Paper from '@mui/material/Paper'
 
 import UpdateIcon from '@mui/icons-material/Update';

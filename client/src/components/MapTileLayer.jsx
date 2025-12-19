@@ -1,4 +1,7 @@
-// only really here because we have two very similar map views that can share this component
+/*
+Refactored tilelayer for light and dark mode that is responsive. Only really here because we have two very similar map views that can share this component.
+ */ 
+
 import {TileLayer} from 'react-leaflet'
 
 export default function MapTileLayer({mode}) {

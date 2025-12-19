@@ -1,3 +1,6 @@
+/**
+ * A view on a map to display all the locations of all memories that the user has tracked.
+ */
 import Stack from "@mui/material/Stack";
 import MemoryMapEmbed from "../components/MemoryMapEmbed";
 import Container from "@mui/material/Container"

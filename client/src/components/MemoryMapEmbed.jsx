@@ -1,14 +1,13 @@
-// very similar to MapEmbed with the difference that pins can nav you to the memory selected.
+/**
+ * very similar to MapEmbed with the difference that pins can nav you to the memory selected. Used on the mapview of all memories 
+ * */ 
 
 import {useEffect} from 'react';
-import { MapContainer, useMap , Marker, Popup} from 'react-leaflet'
+import { MapContainer, useMap , Marker} from 'react-leaflet'
 import {Icon} from 'leaflet'
 import 'leaflet/dist/leaflet.css';
 import * as geolib from 'geolib';
-import { Stack, Typography } from '@mui/material';
-import { NavLink } from 'react-router';
 import MapTileLayer from './MapTileLayer';
-import PushPinIcon from '@mui/icons-material/PushPin';
 import MapPopUp from './MapPopup';
 import markerIconPng from "../map-pin-icon.png"
 

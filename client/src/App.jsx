@@ -1,3 +1,6 @@
+/**
+ * The common parent of all app components. Handles the app bar which displays everything, as well as authentication, memory fetching, and a light/dark mode toggle
+ */
 import './App.css';
 import LoginPage from './pages/LoginPage';
 import MapView from './pages/MapView';

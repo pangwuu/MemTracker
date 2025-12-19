@@ -1,3 +1,6 @@
+/**
+ * Page to allow users to add memories. Redirects to the previous page when done.
+ */
 import { useState, useEffect } from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';

@@ -1,4 +1,6 @@
-// a small memory card to be displayed as a grid on the page
+/**
+ * A small, clickable memory card to be displayed as a grid on the page.
+ * */ 
 import { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';

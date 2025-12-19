@@ -1,3 +1,7 @@
+/*
+* date formatting helper function
+*/ 
+
 const getCleanDate = (oldDate) => {
     const dateObj = new Date(oldDate)
     const formattedDateSlash = dateObj.toLocaleDateString('en-AU');   

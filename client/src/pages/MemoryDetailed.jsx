@@ -1,3 +1,6 @@
+/**
+ * A view where user's can see all photos and other details associated with a memory. Also allows users to delete the entire memory if needed.
+ */
 import { useNavigate, useParams } from "react-router-dom";
 import { Typography, Container, ImageListItem, ImageList, Stack, Button, Box, Chip, Paper, CircularProgress} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';

@@ -1,3 +1,7 @@
+/**
+ * Refactored for consistency. Allows the user to click to the page to add a new memory
+ */
+
 import { Button, Paper, Box } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from "react-router";

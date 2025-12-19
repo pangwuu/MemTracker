@@ -1,3 +1,6 @@
+/**
+ * The initial page the user sees when they open up the app. Uses a supabase magic link for authentication.
+ */
 import { useEffect, useState } from 'react';
 import LockIcon from '@mui/icons-material/Lock';
 import TextField from '@mui/material/TextField';

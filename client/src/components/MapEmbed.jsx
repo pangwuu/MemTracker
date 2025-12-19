@@ -1,3 +1,5 @@
+/* Allows for embedding of multiple points - takes in positions and displays them all on the map. Currently only used for one location but is extensible. */
+
 import {useEffect} from 'react';
 import { MapContainer, useMap , Marker, Popup} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';

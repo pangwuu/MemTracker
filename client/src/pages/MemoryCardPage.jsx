@@ -1,3 +1,6 @@
+/**
+ * The page where users can see all their memories as a grid of cards. Fetches memories from App.jsx each time it's loaded
+ */
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router';
