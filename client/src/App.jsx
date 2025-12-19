@@ -191,7 +191,7 @@ function App() {
       {/* Define routes around here - to each page we may add! */}
       <Routes>
         <Route path='/account' element={<AccountView session={session} />}/>
-        <Route path='/' element={<MemoryCardPage memories={memories} setMemories={() => {setMemories}} session={session} />}/>
+        <Route path='/' element={<MemoryCardPage memories={memories} setMemories={setMemories} session={session} loadingMemories={loadingMemories} />}/>
         <Route path='/mapview' element={<MapView memories={memories} mode={mode}/>}></Route>
         <Route path='/addMemory' element={<AddMemory session={session} onMemoryAdded={getMemories} mode={mode}></AddMemory>}></Route>
         <Route path="/memoryDetailed/:memoryId" element={<MemoryDetailed session={session} memories={memories} onMemoryDelete={getMemories} mode={mode}/>}></Route>

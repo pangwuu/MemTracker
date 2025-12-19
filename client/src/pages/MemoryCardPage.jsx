@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router';
-import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography, InputAdornment } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography, InputAdornment, CircularProgress } from '@mui/material';
 import NewMemoryButton from '../components/NewMemoryLinkButton';
 import GridView from '../components/GridView';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
@@ -11,7 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Fab from '@mui/material/Fab';
 import { useState, useMemo } from 'react';
 
-export default function MemoryCardPage({session, memories}) {
+export default function MemoryCardPage({session, memories, loadingMemories}) {
 
     const [searchTerm, setSearchTerm] = useState('')
     const [sortMethod, setSortMethod] = useState('')
@@ -41,7 +41,7 @@ export default function MemoryCardPage({session, memories}) {
                 return false
             }
 
-            if (memory.title.trim().toLowerCase().startsWith(cleanSearch)) {
+            if (memory.title.trim().toLowerCase().includes(cleanSearch)) {
                 return true
             }
             return false
@@ -175,15 +175,19 @@ export default function MemoryCardPage({session, memories}) {
 
         {sortSelect()}
 
-        {displayedMemories.length > 0 &&
-        GridView(displayedMemories)}
+        {loadingMemories && <Stack>
+            <Typography variant='h5'>Loading your memories</Typography>
+            <CircularProgress></CircularProgress>
+        </Stack>}
+
+        {displayedMemories.length > 0 && !loadingMemories && GridView(displayedMemories)}
 
         {displayedMemories.length == 0 && searchTerm.length !== 0 && sortMethod.length !== 0 && <Box alignSelf={'center'}>
             <Typography variant='h5'>No memories match your search</Typography>
         </Box>
         }        
 
-        {displayedMemories.length == 0 && searchTerm.length == 0 && sortMethod.length == 0 && <Box alignSelf={'center'}>
+        {displayedMemories.length == 0 && searchTerm.length == 0 && sortMethod.length == 0 && !loadingMemories && <Box alignSelf={'center'}>
             <Typography variant='h5'>No memories yet! Maybe go and add one!</Typography>
         </Box>
         }
