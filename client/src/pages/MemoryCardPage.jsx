@@ -180,7 +180,7 @@ export default function MemoryCardPage({session, memories, loadingMemories}) {
 
         {
         loadingMemories && <Box alignSelf={'center'}>
-            <Stack alignSelf={'center'}>
+            <Stack alignSelf={'center'} alignItems={'center'}>
                 <Typography variant='h5'>Loading your memories</Typography>
                 <CircularProgress></CircularProgress>
             </Stack>
