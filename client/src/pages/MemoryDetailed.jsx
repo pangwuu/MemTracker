@@ -48,6 +48,7 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
         else if (count === 0) {
             console.warn("Command ran, but 0 rows were deleted.");
             alert("Could not delete memory. You might not have permission, or it no longer exists.");
+            navigate(-1)
         }
         else {
             // nav and force a reload
@@ -125,7 +126,7 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
     return (
         <Container>
             
-            <Stack padding={2} spacing={2}>
+            <Stack spacing={2}>
 
             <Stack spacing={2} direction={'row'} flexWrap="wrap" useFlexGap>
                 <Box alignItems={'flex-start'}>

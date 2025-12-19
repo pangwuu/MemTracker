@@ -169,7 +169,7 @@ export default function MemoryCardPage({session, memories, loadingMemories}) {
     }
 
     return <Container maxWidth="lg"  sx={{ overflow: 'hidden' }}>
-        <Stack padding={2} spacing={2}>
+        <Stack spacing={2}>
 
         <Typography variant='h4'>All your memories</Typography>
 
