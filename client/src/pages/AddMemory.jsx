@@ -87,35 +87,16 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
 
     // used to update image links when new ones are added
     const updateImages = (newImages) => {
-
-        if (!newImages) {
-            return;
-        }
-        if (newImages.length == 0) {
-            return;
-        }
-
-        let i;
-        const uploadedImages = []
-
-        // TODO: change to parallel uploads w promises
-        for (i = 0; i < newImages.length; i++) {
-            const newImage = newImages[i]
-            const newImageURL = URL.createObjectURL(newImage);
-
-            const newImageItem = {
-                url: newImageURL,
-                image: newImage
-            }
-
-            uploadedImages.push(newImageItem)
-
-        }
+        if (!newImages || newImages.length === 0) return;
         
+        const filesArray = Array.from(newImages);  // ← Convert FileList to Array
         
-        setSelectedImages((prevImages) => [...prevImages, ...uploadedImages]);
-
-
+        const uploadedImages = filesArray.map(file => ({
+            url: URL.createObjectURL(file),
+            image: file
+        }));
+        
+        setSelectedImages(prev => [...prev, ...uploadedImages]);
     }
 
     const clearImages = () => {

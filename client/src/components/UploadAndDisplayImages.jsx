@@ -39,8 +39,11 @@ export default function UploadAndDisplayImages({images, onImageUpload, onClear})
                     hidden
                     multiple
                     onChange={(event) => {
-                        onImageUpload(event.target.files[0])
+                        if (event.target.files) {
+                            onImageUpload(event.target.files);
+                        }
                     }}
+                    
                 />
             </Button>
         </Card>
