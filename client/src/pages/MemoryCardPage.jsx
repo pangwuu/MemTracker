@@ -175,9 +175,9 @@ export default function MemoryCardPage({session, memories, loadingMemories}) {
 
         {sortSelect()}
 
-        {loadingMemories && <Box>
+        {loadingMemories && <Box alignItems={'center'}>
             <Stack>
-                <Typography variant='h5' alignItems={'center'}>Loading your memories</Typography>
+                <Typography variant='h5'>Loading your memories</Typography>
                 <CircularProgress></CircularProgress>
             </Stack>
         </Box>
