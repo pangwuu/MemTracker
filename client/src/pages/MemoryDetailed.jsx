@@ -129,7 +129,7 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
     return (
         <Container>
             
-            <Stack spacing={2}>
+            <Stack spacing={2} paddingTop={2} paddingBottom={3}>
 
             <Stack spacing={2} direction={'row'} flexWrap="wrap" useFlexGap>
                 <Box alignItems={'flex-start'}>

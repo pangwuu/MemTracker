@@ -20,7 +20,7 @@ export default function MapView({memories, mode}) {
     const validPoints = points.filter(p => !isNaN(p.lat) && !isNaN(p.lon));
     const validMemories = memories.filter(m => !isNaN(m.location_lat) && m.location_lat !== null && !isNaN(m.location_long) && m.location_long !== null)
 
-    return <Stack gap={2}>
+    return <Stack gap={2} paddingTop={2} paddingBottom={3}>
         <Container  sx={{ overflow: 'hidden' }}>
 
         <Typography variant="h4">Your memory map!</Typography>

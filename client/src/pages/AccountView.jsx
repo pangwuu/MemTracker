@@ -98,14 +98,14 @@ export default function AccountView({session}) {
 
         var text = null
         if (loading) {
-            text = <Stack spacing={2} paddingTop={3}>
+            text = <Stack spacing={2}>
                 <Typography variant='h4'>Your account</Typography>
                 <Typography variant='body1'>Logged in as: {email}</Typography>
                 <Typography variant='h5'>Loading your bio... please wait</Typography>
             </Stack>
         }
         else if (bio === '') {
-            text = <Stack spacing={2} paddingTop={3}>
+            text = <Stack spacing={2}>
                 <Typography variant='h4'>Your account</Typography>
                 <Typography variant='body1'>Logged in as: {email}</Typography>
                 <Typography variant='h5'>You haven't set up a bio yet! Create one below!</Typography>
@@ -113,7 +113,7 @@ export default function AccountView({session}) {
             
         }
         else {
-            text = <Stack spacing={2} paddingTop={3}>
+            text = <Stack spacing={2}>
             <Typography variant='h4'>Your account</Typography>
                 <Typography variant='body1'>Logged in as: {email}</Typography>
                 <Typography variant='h5'>Your bio:</Typography>
@@ -160,7 +160,7 @@ export default function AccountView({session}) {
 
     return <Container  maxWidth="lg"  sx={{ overflow: 'hidden' }}>
 
-    <Stack spacing={2}>
+    <Stack spacing={2} paddingTop={2}>
         {currentBio()}
         {updateBioComps()}
         <Box alignSelf={'center'}>

@@ -241,9 +241,7 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
     <Stack
         spacing={2}
         paddingBottom={3}
-        sx={{
-            paddingTop:'2%'
-        }}>
+        paddingTop={2}>
 
         {/* Header for button and back button*/}
         <Stack spacing={2} direction={'row'} flexWrap="wrap" useFlexGap>
