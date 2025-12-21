@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "MemTracker",
+  "name": "MemTracker",
   "icons": [
     {
       "src": "favicon.ico",

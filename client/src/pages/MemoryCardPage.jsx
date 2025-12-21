@@ -3,7 +3,6 @@
  */
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
-import { useNavigate } from 'react-router';
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography, InputAdornment, CircularProgress } from '@mui/material';
 import NewMemoryButton from '../components/NewMemoryLinkButton';
 import GridView from '../components/GridView';
@@ -17,10 +16,8 @@ import { useState, useMemo } from 'react';
 export default function MemoryCardPage({session, memories, loadingMemories}) {
 
     const [searchTerm, setSearchTerm] = useState('')
-    const [sortMethod, setSortMethod] = useState('')
+    const [sortMethod, setSortMethod] = useState('Date') // default state will be sorting by date, oldest first, to emulate a timeline sort of feel.
     const [ascendingSort, setAscendingSort] = useState(true)
-    
-    let navigate = useNavigate();
 
     const sortTypes = ['Name', 'Date', 'Location'];
 
@@ -172,7 +169,7 @@ export default function MemoryCardPage({session, memories, loadingMemories}) {
     }
 
     return <Container maxWidth="lg"  sx={{ overflow: 'hidden' }}>
-        <Stack spacing={2} paddingBottom={3}>
+        <Stack spacing={2} paddingBottom={3} paddingTop={2}>
 
         <Typography variant='h4'>All your memories</Typography>
 
