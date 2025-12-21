@@ -70,10 +70,10 @@ export default function MemoryCardPage({session, memories, loadingMemories}) {
         else if (sortMethod == 'Date') {
             matchesSortSearch = matchesSearchTerm.sort((mem1, mem2) => {
                 if (mem1.memory_date.localeCompare(mem2.memory_date) > 0) {
-                    return -1
+                    return 1
                 }
                 // break ties
-                return 1
+                return -1
             })
 
         }
@@ -172,7 +172,7 @@ export default function MemoryCardPage({session, memories, loadingMemories}) {
     }
 
     return <Container maxWidth="lg"  sx={{ overflow: 'hidden' }}>
-        <Stack spacing={2}>
+        <Stack spacing={2} paddingBottom={3}>
 
         <Typography variant='h4'>All your memories</Typography>
 
