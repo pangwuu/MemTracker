@@ -12,15 +12,19 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
+import Divider from '@mui/material/Divider';
 
 import UpdateIcon from '@mui/icons-material/Update';
 import LogoutIcon from '@mui/icons-material/Logout';
+import LockResetIcon from '@mui/icons-material/LockReset';
 import { useNavigate } from 'react-router';
 
 export default function AccountView({session}) {
     const [loading, setLoading] = useState(true)
     const [bio, setBio] = useState('')
     const [tempBio, setTempBio] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
 
     const email = session['user']['email'];
 
@@ -81,6 +85,25 @@ export default function AccountView({session}) {
             alert(error.message)
         } else {
             setBio(newBio)
+        }
+        setLoading(false)
+    }
+
+    async function updatePassword() {
+        if (password !== confirmPassword) {
+            alert("Passwords do not match!")
+            return
+        }
+
+        setLoading(true)
+        const { error } = await supabase.auth.updateUser({ password: password })
+
+        if (error) {
+            alert(error.message)
+        } else {
+            alert("Password updated successfully!")
+            setPassword('')
+            setConfirmPassword('')
         }
         setLoading(false)
     }
@@ -148,7 +171,7 @@ export default function AccountView({session}) {
                 }}
                 startIcon={<UpdateIcon></UpdateIcon>}
                 disabled={loading}>
-                    Confirm and update
+                    Update Bio
                 </Button> 
             </Paper>
 
@@ -158,11 +181,51 @@ export default function AccountView({session}) {
 
     }
 
+    function updatePasswordComps() {
+        return <Stack spacing={2}>
+            <Typography variant='h5'>Update Password</Typography>
+            <TextField
+                label="New Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            />
+            <TextField
+                label="Confirm New Password"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <Box alignSelf={'center'}>
+                <Paper elevation={2} variant='outlined'>
+                    <Button
+                        onClick={updatePassword}
+                        sx={{
+                            paddingLeft: '2vh',
+                            paddingRight: '2vh'
+                        }}
+                        startIcon={<LockResetIcon />}
+                        disabled={loading || !password || !confirmPassword}
+                    >
+                        Set/Update Password
+                    </Button>
+                </Paper>
+            </Box>
+        </Stack>
+    }
+
     return <Container  maxWidth="lg"  sx={{ overflow: 'hidden' }}>
 
-    <Stack spacing={2} paddingTop={2}>
+    <Stack spacing={4} paddingTop={2} paddingBottom={4}>
         {currentBio()}
         {updateBioComps()}
+        
+        <Divider />
+        
+        {updatePasswordComps()}
+        
+        <Divider />
+
         <Box alignSelf={'center'}>
             <Paper elevation={2} variant="outlined">
                 <Button
