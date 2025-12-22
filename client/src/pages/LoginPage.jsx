@@ -63,10 +63,10 @@ export default function LoginPage() {
 
 
     return <Box className={styles.box}>
-    <Stack spacing={2} alignItems="center" sx={{ maxWidth: 350, width: '100%' }}>
+    <Stack spacing={2} alignItems="center" sx={{ maxWidth: 400, width: '100%' }}>
         <LockIcon className={styles.lockIcon}></LockIcon>
 
-        <Alert severity='info'>Log in to access your memories</Alert>
+        <Alert severity='info' sx={{textAlign: "center"}}>Log in to access your memories. If it is your first time, send a magic link for an express login and set up a password later.</Alert>
 
         <Box component='form' onSubmit={handlePasswordLogin} justifyContent={'center'} width="100%">
             <Stack spacing={2} alignItems='center' width="100%">
