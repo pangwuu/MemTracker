@@ -6,10 +6,13 @@ import {useEffect} from 'react';
 import { MapContainer, useMap , Marker} from 'react-leaflet'
 import {Icon} from 'leaflet'
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import * as geolib from 'geolib';
 import MapTileLayer from './MapTileLayer';
 import MapPopUp from './MapPopup';
 import markerIconPng from "../map-pin-icon.png"
+import MarkerClusterGroup from 'react-leaflet-cluster';
 
 function MapControllerChild({positions}) {
   // calculated ideal zoom and fits the bounds automatically
@@ -26,7 +29,7 @@ function MapControllerChild({positions}) {
     const corner2 = [bounds.maxLat, bounds.maxLng];
 
     // "fitBounds" automatically calculates the ideal zoom and center
-    map.fitBounds([corner1, corner2], { padding: [10, 10], maxZoom: 15, animate: true });
+    map.fitBounds([corner1, corner2], { padding: [30, 30], maxZoom: 16, animate: true });
 
   }, [positions, map])
 
@@ -50,15 +53,17 @@ export default function MemoryMapEmbed({memories, mode}) {
     return <MapContainer
     
     center={initialCenter} 
-            zoom={13} 
+            zoom={12} 
             scrollWheelZoom={true} 
             style={{ height: "70dvh", width: "100%" }}
             >
     <MapTileLayer mode={mode}/>
-    {memories.map((memory, index) =>
-    <Marker position={[memory.location_lat, memory.location_long]} key={index} icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]})}>
-        {MapPopUp(memory)}
-    </Marker>)}
+    <MarkerClusterGroup chunkedLoading>
+      {memories.map((memory, index) =>
+      <Marker position={[memory.location_lat, memory.location_long]} key={index} icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]})}>
+          {MapPopUp(memory)}
+      </Marker>)}
+    </MarkerClusterGroup>
 
     <MapControllerChild positions={validPoints}></MapControllerChild>
 
