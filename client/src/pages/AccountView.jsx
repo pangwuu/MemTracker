@@ -19,7 +19,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import LockResetIcon from '@mui/icons-material/LockReset';
 import { useNavigate } from 'react-router';
 
-export default function AccountView({session}) {
+export default function AccountView({session, mode, setMode}) {
     const [loading, setLoading] = useState(true)
     const [bio, setBio] = useState('')
     const [tempBio, setTempBio] = useState('')
@@ -109,6 +109,7 @@ export default function AccountView({session}) {
     }
 
     async function signOut() {
+        setMode('light')
         const { error } = await supabase.auth.signOut()
         if (error) {
             alert(error.message)
