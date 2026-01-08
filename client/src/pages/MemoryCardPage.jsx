@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography, InputAdornment, CircularProgress } from '@mui/material';
 import NewMemoryButton from '../components/NewMemoryLinkButton';
+import Divider from '@mui/material/Divider';
 import GridView from '../components/GridView';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -183,6 +184,7 @@ export default function MemoryCardPage({session, memories, loadingMemories}) {
         <Typography variant='h4'>All your memories</Typography>
 
         {sortSelect()}
+        <Divider/>
 
         {
         loadingMemories && <Box alignSelf={'center'}>
