@@ -51,7 +51,7 @@ export default function App() {
   );
 }
 
-function AppContent({ mode, setMode, theme }) {
+function AppContent({ mode, setMode }) {
   const navigate = useNavigate();
   const [currentView, setCurrentView] = useState(Views.User);
   const [session, setSession] = useState(null);
@@ -153,7 +153,7 @@ function AppContent({ mode, setMode, theme }) {
         <Route path='/' element={<MemoryCardPage memories={memories} setMemories={setMemories} session={session} loadingMemories={loadingMemories} />} />
         <Route path='/mapview' element={<MapView memories={memories} mode={mode} />} />
         <Route path='/addMemory' element={<AddMemory session={session} onMemoryAdded={getMemories} mode={mode} />} />
-        <Route path='/editMemory/:memoryId' element={<AddMemory session={session} onMemoryAdded={getMemories} mode={mode} />} />
+        <Route path='/editMemory/:memoryId' element={<AddMemory session={session} onMemoryAdded={getMemories} mode={mode} memories={memories} />} />
         <Route path="/memoryDetailed/:memoryId" element={<MemoryDetailed session={session} memories={memories} onMemoryDelete={getMemories} mode={mode} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

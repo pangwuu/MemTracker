@@ -50,6 +50,7 @@ export default function AddMemory({session, onMemoryAdded, mode, memories}) {
 
     // Pre-fill data if editing
     useEffect(() => {
+            
         if (isEditing && memories) {
             const mem = memories.find(m => m.mem_id == memoryId);
             if (mem) {
