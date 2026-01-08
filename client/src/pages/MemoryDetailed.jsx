@@ -265,7 +265,7 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
                         <Stack direction={'row'} spacing={1}>
                             <ArrowBackIcon/>
                             <Typography variant="body1">
-                                Back to all memories
+                                Back
                             </Typography>
                         </Stack>
 
@@ -277,7 +277,7 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
                         <Stack direction={'row'} spacing={1}>
                             <EditIcon/>
                             <Typography variant="body1">
-                                Edit this memory
+                                Edit
                             </Typography>
                         </Stack>
 
@@ -291,7 +291,7 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
                         <Stack direction={'row'} spacing={1}>
                             <DeleteIcon/>
                             <Typography variant="body1">
-                                Delete this memory
+                                Delete
                             </Typography>
                         </Stack>
 
