@@ -98,7 +98,7 @@ function App() {
         const {user} = session
         
         const {data, error} = await supabase.from('memories')
-        .select(`mem_id, title, description, memory_date, location, image_urls, location_plain_string, location_lat, location_long`).eq('user_id', user.id)
+        .select(`mem_id, title, description, memory_date, location, image_urls, location_plain_string, location_lat, location_long, created_at`).eq('user_id', user.id)
 
         if (error) {
             alert(error)

@@ -19,7 +19,7 @@ export default function MemoryCardPage({session, memories, loadingMemories}) {
     const [sortMethod, setSortMethod] = useState('Date') // default state will be sorting by date, oldest first, to emulate a timeline sort of feel.
     const [ascendingSort, setAscendingSort] = useState(true)
 
-    const sortTypes = ['Name', 'Date', 'Location'];
+    const sortTypes = ['Name', 'Date', 'Location', 'Date Added'];
 
     const handleSortTypeChange = (event) => {
         setSortMethod(event.target.value)
@@ -87,6 +87,15 @@ export default function MemoryCardPage({session, memories, loadingMemories}) {
                 }
             })        
         }    
+        else if (sortMethod == 'Date Added') {
+            matchesSortSearch = matchesSearchTerm.sort((mem1, mem2) => {
+                if (mem1.created_at.localeCompare(mem2.created_at) > 0) {
+                    return 1
+                }
+                // break ties
+                return -1
+            })
+        }
         else {
             matchesSortSearch = matchesSearchTerm
         }

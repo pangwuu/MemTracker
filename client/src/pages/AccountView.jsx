@@ -162,9 +162,18 @@ export default function AccountView({session, mode, setMode}) {
         return text
 
     }
+    function newBioTitle() {
+        if (bio === '') {
+            return <Typography variant='h5'>Create your bio!</Typography>
+        }
+        else {
+            return <Typography variant='h5'>Update your bio!</Typography>
+        }
+    }
 
     function updateBioComps() {
         return <Stack spacing={2}>
+        {newBioTitle()}
         <TextField
         label="New bio"
         multiline
