@@ -25,8 +25,9 @@ import { CircularProgress } from '@mui/material';
 import dayjs from 'dayjs';
 
 export default function AddMemory({session, onMemoryAdded, mode, memories}) {
+    const { memoryId: memoryIdParam } = useParams();
+    const memoryId = memoryIdParam;
 
-    const { memoryId } = useParams();
     const isEditing = !!memoryId;
 
     const [memTitle, setMemTitle] = useState('');
@@ -277,17 +278,26 @@ export default function AddMemory({session, onMemoryAdded, mode, memories}) {
 
         let error;
 
-        // setUploading(true) was already called at the start of the function
-
         if (isEditing && memoryId) {
-            // UPDATE: Do not include user_id or mem_id in the body.
-            // Match by mem_id. Pass as string to support both UUIDs and integers.
-            const { error: updateError } = await supabase
+    
+            const { data, error } = await supabase
                 .from('memories')
                 .update(baseUpdates)
-                .eq('mem_id', memoryId);
+                .eq('mem_id', memoryId)
+                .select();
             
-            error = updateError;
+            if (error) {
+                console.error('Error:', error);
+            } else {
+                console.log('Update result:', data);
+                if (!data || data.length === 0) {
+                    console.error('No rows were updated! Memory ID might not exist or RLS policy blocking update');
+                    alert('Could not find memory to update. It may have been deleted.');
+                    setUploading(false);
+                    return;
+                }
+            }
+
         } else {
             // INSERT: Include user_id. Let database generate mem_id.
             const insertUpdates = {

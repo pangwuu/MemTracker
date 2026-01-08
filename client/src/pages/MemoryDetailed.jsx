@@ -277,7 +277,7 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
                         <Stack direction={'row'} spacing={1}>
                             <EditIcon/>
                             <Typography variant="body1">
-                                Edit
+                                Edit this memory
                             </Typography>
                         </Stack>
 
