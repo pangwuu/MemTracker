@@ -1,5 +1,5 @@
 /**
- * Page to allow users to add memories. Redirects to the previous page when done.
+ * Page to allow users to add or edit memories. Redirects to the previous page when done.
  */
 import { useState, useEffect } from 'react';
 import Stack from '@mui/material/Stack';
