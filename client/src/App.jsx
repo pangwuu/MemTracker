@@ -1,210 +1,158 @@
-/**
- * The common parent of all app components. Handles the app bar which displays everything, as well as authentication, memory fetching, and a light/dark mode toggle
- */
 import './App.css';
-import LoginPage from './pages/LoginPage';
-import MapView from './pages/MapView';
-import MemoryCardPage from './pages/MemoryCardPage'
-import AccountView from './pages/AccountView';
-import AddMemory from './pages/AddMemory.jsx';
 import { useState, useEffect, useCallback, useMemo, createContext } from 'react';
-import IconButton from '@mui/material/IconButton';
+import { BrowserRouter, Routes, Route, Navigate, NavLink, useNavigate, Link } from "react-router-dom";
+
+// MUI Imports
+import { createTheme, ThemeProvider, CssBaseline, Toolbar, AppBar, Stack, Box, Typography, Button, IconButton, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-
-import { BrowserRouter, Routes, Route, Navigate, NavLink } from "react-router-dom";
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import PersonIcon from '@mui/icons-material/Person';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import MapIcon from '@mui/icons-material/Map';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
-import { supabase } from './supabaseClient'
-import {Views} from './consts.ts'
-
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-import CssBaseline from '@mui/material/CssBaseline';
-import Toolbar from '@mui/material/Toolbar';
-import AppBar from '@mui/material/AppBar';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
+// Project Imports
+import { supabase } from './supabaseClient';
+import { Views } from './consts.ts';
+import LoginPage from './pages/LoginPage';
+import MapView from './pages/MapView';
+import MemoryCardPage from './pages/MemoryCardPage';
+import AccountView from './pages/AccountView';
+import AddMemory from './pages/AddMemory.jsx';
 import MemoryDetailed from './pages/MemoryDetailed.jsx';
-import { Button } from '@mui/material';
 
-// Define your custom font family
-const customFont = "'Roboto', sans-serif"; 
-export const ColorModeContext = createContext({ toggleColorMode: () => {} }); // for dark mode
+const customFont = "'Roboto', sans-serif";
+export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
-function App() {
+export default function App() {
+  const [mode, setMode] = useState('light');
 
-  // const [isCardView, setIsCardView] = useState(Views.User);
+  const colorMode = useMemo(() => ({
+    toggleColorMode: () => {
+      setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+    },
+  }), []);
+
+  const theme = useMemo(() => createTheme({
+    palette: { mode },
+    typography: { fontFamily: customFont },
+  }), [mode]);
+
+  return (
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {/* Only ONE BrowserRouter at the very top */}
+        <BrowserRouter>
+          <AppContent mode={mode} theme={theme} />
+        </BrowserRouter>
+      </ThemeProvider>
+    </ColorModeContext.Provider>
+  );
+}
+
+function AppContent({ mode, theme }) {
+  const navigate = useNavigate();
   const [currentView, setCurrentView] = useState(Views.User);
   const [session, setSession] = useState(null);
   const [memories, setMemories] = useState([]);
   const [loadingMemories, setLoadingMemories] = useState(false);
 
-  const [mode, setMode] = useState('light');  
-
-  // toggle between the two
-  const colorMode = useMemo(
-    () => ({
-      toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
-      },
-    }),
-    [],
-  );  
-
-  // change mode
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode, // 'light' or 'dark'
-        },
-        typography: {
-          fontFamily: customFont,
-        },
-      }),
-    [mode],
-  );
-  
-  function handleView(event, newView) {
-    if (newView === null) {
-      return
-    }
-    setCurrentView(newView);
-  }
-  
-  // connect and get session token
+  // Auth Listener
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-    })
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-    
-  }, [])  
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
-    // get all the data for this user so it can be shared across all components. Wrapping it in a useCallback allows any results to be cached (i.e you dont rerun this each frame you just retrieve the cached value!)
-    const getMemories = useCallback(async () => {
-        if (!session) {
-          return;
-        }
-        setLoadingMemories(true)
+  const getMemories = useCallback(async () => {
+    if (!session) return;
+    setLoadingMemories(true);
+    const { data, error } = await supabase
+      .from('memories')
+      .select(`mem_id, title, description, memory_date, location, image_urls, location_plain_string, location_lat, location_long, created_at`)
+      .eq('user_id', session.user.id);
 
-        const {user} = session
-        
-        const {data, error} = await supabase.from('memories')
-        .select(`mem_id, title, description, memory_date, location, image_urls, location_plain_string, location_lat, location_long, created_at`).eq('user_id', user.id)
-
-        if (error) {
-            alert(error)
-        }
-
-        setLoadingMemories(false)
-        setMemories(data);
-
-    }, [session])
-
-    useEffect(() => {
-      getMemories()
-    }, [getMemories])
-
-  if (!session) {
-        return <ThemeProvider theme={theme}>
-          <BrowserRouter>
-            <Routes>
-              <Route path='/' element={<LoginPage></LoginPage>}></Route>
-            </Routes>
-          </BrowserRouter>
-        </ThemeProvider>;
+    if (error) {
+      console.error(error);
+    } else {
+      setMemories(data);
     }
+    setLoadingMemories(false);
+  }, [session]);
 
-  // for the bar at the top - consists of the bar, clickable logo, dark mode toggler, and switch
-  const appBar = () => {
-    return <AppBar position='static'
-        color='inherit'
-        sx={{
-          boxShadow: '1'
-        }}>
+  useEffect(() => {
+    getMemories();
+  }, [getMemories]);
+
+  // Redirect to Login if no session
+  if (!session) {
+    return (
+      <Routes>
+        <Route path='*' element={<LoginPage />} />
+      </Routes>
+    );
+  }
+
+  const handleRandomMemory = () => {
+    if (memories.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * memories.length);
+    navigate(`/memoryDetailed/${memories[randomIndex].mem_id}`);
+  };
+
+  return (
+    <>
+      <AppBar position='static' color='inherit' sx={{ boxShadow: 1 }}>
         <Toolbar>
           <Box>
-            <Button href="/" color='black' sx={{ textTransform: 'none' }}>
-              <Typography variant='h5'>MemTracker</Typography>
+            {/* Use component={Link} to prevent page refreshes */}
+            <Button component={Link} to="/" color='inherit' sx={{ textTransform: 'none' }}>
+              <Typography variant='h5' sx={{ color: 'text.primary' }}>MemTracker</Typography>
             </Button>
-
           </Box>
+
           <Box sx={{ flexGrow: 1 }} />
 
-          <Stack spacing={2} direction='row'>
-
-          <Box>
+          <Stack spacing={2} direction='row' alignItems="center">
             <ToggleButtonGroup
-            value={currentView}
-            exclusive
-            onChange={handleView}
-            aria-label="page view"
-            sx={{
-              backgroundColor: 'background.paper', 
-              borderRadius: 1
-            }}
-            size='small'
-            color='inherit'
+              value={currentView}
+              exclusive
+              onChange={(e, val) => val && setCurrentView(val)}
+              size='small'
             >
-              {/* Buttons to switch different views */}
-              <ToggleButton value={'account'} aria-label={Views.User} component={NavLink} to="/account">
-                <PersonIcon/>
+              <ToggleButton value='account' component={NavLink} to="/account">
+                <PersonIcon />
               </ToggleButton>
-
-              <ToggleButton value={'/'} aria-label={Views.User} component={NavLink} to="/">
+              <ToggleButton value='home' component={NavLink} to="/">
                 <CollectionsIcon />
               </ToggleButton>
-
-              <ToggleButton value={'mapview'} aria-label={Views.User} component={NavLink} to="/mapview">
+              <ToggleButton value='mapview' component={NavLink} to="/mapview">
                 <MapIcon />
-              </ToggleButton>            
-              
+              </ToggleButton>
+              {/* Random is a button action, not a NavLink destination */}
+              <ToggleButton value='random' onClick={handleRandomMemory}>
+                <QuestionMarkIcon />
+              </ToggleButton>
             </ToggleButtonGroup>
-          </Box>
 
-          {/* Dark mode toggle */}
-          <IconButton onClick={colorMode.toggleColorMode} color="inherit">
-            {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-          </IconButton>          
-
+            <IconButton onClick={() => theme.palette.mode === 'light' ? setMode('dark') : setMode('light')} color="inherit">
+              {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+            </IconButton>
           </Stack>
+        </Toolbar>
+      </AppBar>
 
-          
-          </Toolbar>
-        </AppBar>    
-  }
-  
-  return <ThemeProvider
-  theme={theme}
-   defaultMode="dark"
-  noSsr
-  >
-    <CssBaseline/> 
-    <BrowserRouter>
-      {appBar()}
-      
-      {/* Define routes around here - to each page we may add! */}
       <Routes>
-        <Route path='/account' element={<AccountView session={session} mode={mode} setMode={setMode} />}/>
-        <Route path='/' element={<MemoryCardPage memories={memories} setMemories={setMemories} session={session} loadingMemories={loadingMemories} />}/>
-        <Route path='/mapview' element={<MapView memories={memories} mode={mode}/>}></Route>
-        <Route path='/addMemory' element={<AddMemory session={session} onMemoryAdded={getMemories} mode={mode} memories={memories}></AddMemory>}></Route>
-        <Route path='/editMemory/:memoryId' element={<AddMemory session={session} onMemoryAdded={getMemories} mode={mode} memories={memories}></AddMemory>}></Route>
-        <Route path="/memoryDetailed/:memoryId" element={<MemoryDetailed session={session} memories={memories} onMemoryDelete={getMemories} mode={mode}/>}></Route>
+        <Route path='/account' element={<AccountView session={session} mode={mode} />} />
+        <Route path='/' element={<MemoryCardPage memories={memories} setMemories={setMemories} session={session} loadingMemories={loadingMemories} />} />
+        <Route path='/mapview' element={<MapView memories={memories} mode={mode} />} />
+        <Route path='/addMemory' element={<AddMemory session={session} onMemoryAdded={getMemories} mode={mode} />} />
+        <Route path='/editMemory/:memoryId' element={<AddMemory session={session} onMemoryAdded={getMemories} mode={mode} />} />
+        <Route path="/memoryDetailed/:memoryId" element={<MemoryDetailed session={session} memories={memories} onMemoryDelete={getMemories} mode={mode} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
-
-  </ThemeProvider>
-  
+    </>
+  );
 }
-
-export default App;
