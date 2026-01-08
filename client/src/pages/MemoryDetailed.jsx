@@ -21,6 +21,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
+import EditIcon from '@mui/icons-material/Edit';
+
 export default function MemoryDetailed({ session, memories, onMemoryDelete, mode }) {
 
     const [imageUrls, setImageUrls] = useState([])
@@ -264,6 +266,18 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
                             <ArrowBackIcon/>
                             <Typography variant="body1">
                                 Back to all memories
+                            </Typography>
+                        </Stack>
+
+                    </Button>
+                    </Paper>
+
+                    <Paper variant="outlined">
+                    <Button onClick={() => navigate(`/editMemory/${memoryId}`)}>
+                        <Stack direction={'row'} spacing={1}>
+                            <EditIcon/>
+                            <Typography variant="body1">
+                                Edit this memory
                             </Typography>
                         </Stack>
 

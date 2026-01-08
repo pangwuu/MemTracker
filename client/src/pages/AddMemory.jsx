@@ -15,14 +15,20 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import { supabase } from '../supabaseClient'
 import Container from '@mui/material/Container';
 import Fab from '@mui/material/Fab';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useNavigate } from "react-router-dom";
-import { CircularProgress, LinearProgress } from '@mui/material';
+import { useNavigate, useParams } from "react-router-dom";
+import { CircularProgress } from '@mui/material';
+import dayjs from 'dayjs';
 
-export default function AddMemory({session, onMemoryAdded, mode}) {
+export default function AddMemory({session, onMemoryAdded, mode, memories}) {
+    const { memoryId: memoryIdParam } = useParams();
+    const memoryId = memoryIdParam;
+
+    const isEditing = !!memoryId;
 
     const [memTitle, setMemTitle] = useState('');
     const [memDesc, setMemDesc] = useState('');
@@ -42,6 +48,54 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
 
     let navigate = useNavigate();
 
+    // Pre-fill data if editing
+    useEffect(() => {
+        if (isEditing && memories) {
+            const mem = memories.find(m => m.mem_id == memoryId);
+            if (mem) {
+                setMemTitle(mem.title || '');
+                setMemDesc(mem.description || '');
+                setMemDate(mem.memory_date ? dayjs(mem.memory_date) : null);
+                
+                // Pre-fill location data
+                if (mem.location_plain_string) {
+                    setlocationInput(mem.location_plain_string);
+                    setLocationValue(mem.location_plain_string);
+                }
+                if (mem.location_lat && mem.location_long) {
+                    setSelectedLat(mem.location_lat);
+                    setSelectedLong(mem.location_long);
+                }
+
+                // Pre-fill images
+                if (mem.image_urls && mem.image_urls.length > 0) {
+                    const fetchImages = async () => {
+                        const loadedImages = await Promise.all(
+                            mem.image_urls.map(async (path) => {
+                                const { data, error } = await supabase.storage
+                                    .from('memory-images')
+                                    .download(path);
+                                
+                                if (error) {
+                                    console.error('Error downloading image:', path, error);
+                                    return null;
+                                }
+
+                                return {
+                                    url: URL.createObjectURL(data),
+                                    path: path,
+                                    isExisting: true
+                                };
+                            })
+                        );
+                        setSelectedImages(loadedImages.filter(Boolean));
+                    };
+                    fetchImages();
+                }
+            }
+        }
+    }, [isEditing, memories, memoryId]);
+
     // used to autofill the text field and get user to select
     useEffect(() => {
 
@@ -52,6 +106,9 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
                 if (locationInput.length <= 3) {
                     return;
                 }
+
+                // If editing and input matches saved location, don't search immediately unless user types
+                // But simplified logic: just search. Debounce handles it.
 
                 const searchLink = `https://nominatim.openstreetmap.org/search?q=${locationInput}, Australia&format=jsonv2`
                 
@@ -77,6 +134,8 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
                 }
             }
 
+            // Only fetch if locationInput is different from already selected value (to avoid search on pre-fill)
+            // However, for simplicity and since locationInput updates on pre-fill, we can let it run or check.
             fetchPlaces();
 
         }, 200)
@@ -96,7 +155,8 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
         
         const uploadedImages = filesArray.map(file => ({
             url: URL.createObjectURL(file),
-            image: file
+            image: file,
+            isExisting: false
         }));
         
         setSelectedImages(prev => [...prev, ...uploadedImages]);
@@ -141,12 +201,14 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
 
     
     async function uploadImages() {
-        // function to upload all images in selectedImages
+        // function to upload NEW images in selectedImages
 
         setUploadingImages(true)
+        
+        const newImages = selectedImages.filter(img => !img.isExisting);
 
         // for concurrency - create an array of promises which are their own uploads
-        const uploadedPromises = selectedImages.map(async (imageItem) => {
+        const uploadedPromises = newImages.map(async (imageItem) => {
             
             const imageFile = imageItem.image
 
@@ -182,7 +244,7 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
 
     }
 
-    async function addMemory() {
+    async function handleSave() {
         if (!memDate || !memTitle || !locationValue) {
             alert("Please add a title, date and location!");
             return;
@@ -192,10 +254,18 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
 
         const { user } = session
 
-        const imageUrls = await uploadImages();
+        // 1. Upload new images
+        const newImageUrls = await uploadImages();
 
-        const updates = {
-            user_id: user.id,
+        // 2. Collect existing image paths
+        const existingImageUrls = selectedImages
+            .filter(img => img.isExisting)
+            .map(img => img.path);
+
+        // 3. Combine
+        const finalImageUrls = [...existingImageUrls, ...newImageUrls];
+
+        const baseUpdates = {
             title: memTitle,
             description: memDesc,
             memory_date: memDate.format('YYYY-MM-DD'),
@@ -203,18 +273,52 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
             location_lat: selectedLat,
             location_long: selectedLong,
             location: `POINT(${selectedLong} ${selectedLat})`,
-            image_urls: imageUrls
+            image_urls: finalImageUrls
         }
 
-        const {error} = await supabase.from('memories').insert(updates)
+        let error;
+
+        if (isEditing && memoryId) {
+    
+            const { data, error } = await supabase
+                .from('memories')
+                .update(baseUpdates)
+                .eq('mem_id', memoryId)
+                .select();
+            
+            if (error) {
+                console.error('Error:', error);
+            } else {
+                console.log('Update result:', data);
+                if (!data || data.length === 0) {
+                    console.error('No rows were updated! Memory ID might not exist or RLS policy blocking update');
+                    alert('Could not find memory to update. It may have been deleted.');
+                    setUploading(false);
+                    return;
+                }
+            }
+
+        } else {
+            // INSERT: Include user_id. Let database generate mem_id.
+            const insertUpdates = {
+                ...baseUpdates,
+                user_id: user.id
+            };
+
+            const { error: insertError } = await supabase
+                .from('memories')
+                .insert(insertUpdates);
+            
+            error = insertError;
+        }
 
         if (error) {
-            alert(error.message)
+            console.error('Error saving memory:', error);
+            alert(`Error: ${error.message}`)
         }
         else {
 
             await onMemoryAdded()
-
 
             // clear all forms
             setMemTitle('')
@@ -228,8 +332,6 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
             setMemDate(null)
 
             navigate(-1)
-
-
         }
 
         setUploading(false)
@@ -251,7 +353,7 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
                     marginTop: '0.5vh'
                 }}><ArrowBackIcon/></Fab>
             </Box>
-            <Typography variant="h3">Add a new memory</Typography>
+            <Typography variant="h3">{isEditing ? 'Edit memory' : 'Add a new memory'}</Typography>
         </Stack>        
 
         {titleAndDescription()}
@@ -292,9 +394,9 @@ export default function AddMemory({session, onMemoryAdded, mode}) {
                     paddingLeft: '2vh',
                     paddingRight: '2vh'
                 }}
-                onClick={() => {addMemory()}}
-                startIcon={<AddIcon/>}>
-                Add memory!
+                onClick={() => {handleSave()}}
+                startIcon={isEditing ? <EditIcon/> : <AddIcon/>}>
+                {isEditing ? 'Update memory!' : 'Add memory!'}
                 </Button>
             </Paper>
             {uploading && <CircularProgress />}

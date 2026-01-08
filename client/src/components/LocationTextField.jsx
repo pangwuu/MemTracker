@@ -22,6 +22,8 @@ export default function LocationTextField({locationInput, setlocationInput, retu
 
             {/* use the autocomplete mui component */}
             <Autocomplete
+                inputValue={locationInput}
+                value={locationValue ? { display_name: locationValue } : null} 
                 filterOptions={(x) => x} // to prevent some filtering? idk
                 options={returnedResults}
                 renderInput={(params) => <TextField {...params} label="Memory location" />}
