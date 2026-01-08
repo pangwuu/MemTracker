@@ -12,6 +12,11 @@ import { useState, useEffect } from "react";
 import { supabase } from '../supabaseClient'
 import getCleanDate from "../helpers/getCleanDate";
 import MapEmbed from "../components/MapEmbed";
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -21,10 +26,16 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
     const [imageUrls, setImageUrls] = useState([])
     const [loadingImages, setLoadingImages] = useState(false)
     const { memoryId } = useParams();
+    
+    const [isDeleting, setIsDeleting] = useState(false)
 
     let navigate = useNavigate();
 
     const memory = memories && memories.find(m => m.mem_id == memoryId);
+
+    function triggerDelete() {
+        setIsDeleting(true)
+    }
 
     async function deleteMemory() {
         // delete images first
@@ -128,6 +139,25 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
 
     return (
         <Container>
+            <Dialog
+            open={isDeleting}
+            >
+            <DialogTitle>
+                Are you sure?
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    This is an irreversible action. Deleted memories cannot be recovered. 
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => setIsDeleting(false)}>Back</Button>
+                <Button onClick={() => deleteMemory()} color="error" autoFocus>
+                    Delete
+                </Button>
+            </DialogActions>
+                
+            </Dialog>
             
             <Stack spacing={2} paddingTop={2} paddingBottom={3}>
 
@@ -242,8 +272,8 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
 
                     <Paper variant="outlined">
                     <Button color="error"
-                    // replace w delete function
-                    onClick={() => deleteMemory()}>
+                    
+                    onClick={() => triggerDelete()}>
                         <Stack direction={'row'} spacing={1}>
                             <DeleteIcon/>
                             <Typography variant="body1">

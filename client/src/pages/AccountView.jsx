@@ -14,6 +14,12 @@ import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Divider from '@mui/material/Divider';
 
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+
 import UpdateIcon from '@mui/icons-material/Update';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LockResetIcon from '@mui/icons-material/LockReset';
@@ -25,10 +31,18 @@ export default function AccountView({session, mode, setMode}) {
     const [tempBio, setTempBio] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [confirmUpdateBio, setConfirmUpdateBio] = useState(false)
 
     const email = session['user']['email'];
 
     let navigate = useNavigate()
+
+    function updateBio() {
+        updateProfile(tempBio)
+        setBio(tempBio);
+        setTempBio('')
+        setConfirmUpdateBio(false)
+    }
 
     useEffect(() => {
         let ignore = false;
@@ -101,7 +115,7 @@ export default function AccountView({session, mode, setMode}) {
         if (error) {
             alert(error.message)
         } else {
-            alert("Password updated successfully!")
+            alert("Password updated successfully! You can use this with your email the next time you login!")
             setPassword('')
             setConfirmPassword('')
         }
@@ -163,15 +177,15 @@ export default function AccountView({session, mode, setMode}) {
             <Paper elevation={2} variant='outlined'>
 
                 <Button
-                onClick={() => {updateProfile(tempBio)
-                    setBio(tempBio);
+                onClick={() => {
+                    setConfirmUpdateBio(true)
                 }}
                 sx={{
                     paddingLeft: '2vh',
                     paddingRight: '2vh'
                 }}
                 startIcon={<UpdateIcon></UpdateIcon>}
-                disabled={loading}>
+                disabled={loading || (tempBio.length == 0)}>
                     Update Bio
                 </Button> 
             </Paper>
@@ -180,6 +194,28 @@ export default function AccountView({session, mode, setMode}) {
                 
     </Stack>
 
+    }
+
+    function confirmUpdateBioDialog() {
+        return <Dialog
+        open={confirmUpdateBio}
+        >
+        <DialogTitle>
+            Are you sure?
+        </DialogTitle>
+        <DialogContent>
+            <DialogContentText>
+                This is an irreversible action. Your old bio will not be able to be recovered.
+            </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={() => setConfirmUpdateBio(false)}>Back</Button>
+            <Button onClick={() => updateBio()} autoFocus>
+                Update
+            </Button>
+        </DialogActions>                
+            
+        </Dialog>
     }
 
     function updatePasswordComps() {
@@ -216,6 +252,8 @@ export default function AccountView({session, mode, setMode}) {
     }
 
     return <Container  maxWidth="lg"  sx={{ overflow: 'hidden' }}>
+
+    {confirmUpdateBioDialog()}
 
     <Stack spacing={4} paddingTop={2} paddingBottom={4}>
         {currentBio()}
