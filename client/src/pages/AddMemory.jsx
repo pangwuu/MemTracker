@@ -22,6 +22,7 @@ import Fab from '@mui/material/Fab';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate, useParams } from "react-router-dom";
 import { CircularProgress } from '@mui/material';
+import imageCompression from 'browser-image-compression';
 import dayjs from 'dayjs';
 
 export default function AddMemory({session, onMemoryAdded, mode, memories}) {
@@ -152,7 +153,7 @@ export default function AddMemory({session, onMemoryAdded, mode, memories}) {
     const updateImages = (newImages) => {
         if (!newImages || newImages.length === 0) return;
         
-        const filesArray = Array.from(newImages);  // ← Convert FileList to Array
+        const filesArray = Array.from(newImages);
         
         const uploadedImages = filesArray.map(file => ({
             url: URL.createObjectURL(file),
@@ -211,17 +212,25 @@ export default function AddMemory({session, onMemoryAdded, mode, memories}) {
         // for concurrency - create an array of promises which are their own uploads
         const uploadedPromises = newImages.map(async (imageItem) => {
             
+            // Compression options
+            const options = {
+                maxSizeMB: 0.8,          
+                maxWidthOrHeight: 1920,
+                useWebWorker: true
+            };            
+            
             const imageFile = imageItem.image
+            const compressedFile = await imageCompression(imageFile, options);
 
             // Generate unique filename + url so it can be identified
-            const fileExt = imageFile.name.split('.').pop();
+            const fileExt = compressedFile.type.split('/')[1];
             const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
             const filePath = `${session.user.id}/${fileName}`;
 
             // ensure a memory-images bucket appears there
             const { data, error } = await supabase.storage
                 .from('memory-images')
-                .upload(filePath, imageFile, {
+                .upload(filePath, compressedFile, {
                     upsert: false
                 });
 
