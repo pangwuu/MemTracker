@@ -136,30 +136,28 @@ export default function AccountView({session, mode, setMode}) {
 
         var text = null
         if (loading) {
-            text = <Stack spacing={2}>
-                <Typography variant='h4'>Your account</Typography>
-                <Typography variant='body1'>Logged in as: {email}</Typography>
-                <Typography variant='h5'>Loading your bio... please wait</Typography>
-            </Stack>
+            text = <Typography variant='h5'>Loading your bio... please wait</Typography>
         }
         else if (bio === '') {
-            text = <Stack spacing={2}>
-                <Typography variant='h4'>Your account</Typography>
-                <Typography variant='body1'>Logged in as: {email}</Typography>
-                <Typography variant='h5'>You haven't set up a bio yet! Create one below!</Typography>
-            </Stack>
+            text = <Typography variant='h5'>You haven't set up a bio yet! Create one below!</Typography>
             
         }
         else {
-            text = <Stack spacing={2}>
-            <Typography variant='h4'>Your account</Typography>
-                <Typography variant='body1'>Logged in as: {email}</Typography>
-                <Typography variant='h5'>Your bio:</Typography>
-                <Typography variant='body1' style={{ wordWrap: "break-word" }}>{bio}</Typography>
-            </Stack>
+            text = <> 
+            <Typography variant='h5'>Your bio:</Typography>
+            <Typography variant='body1' style={{ wordWrap: "break-word" }}>{bio}</Typography>
+            </>
+            
         }
 
-        return text
+        return <Stack spacing={2}>
+                <Typography variant='h4'>Your account</Typography>
+                <Typography variant='body1'>Logged in as: {email}</Typography>
+                <Divider/>
+                {text}
+        </Stack>
+
+        
 
     }
     function newBioTitle() {
@@ -265,12 +263,16 @@ export default function AccountView({session, mode, setMode}) {
     {confirmUpdateBioDialog()}
 
     <Stack spacing={4} paddingTop={2} paddingBottom={4}>
+        
         {currentBio()}
+        <Divider />
         {updateBioComps()}
         
         <Divider />
         
-        {updatePasswordComps()}
+        {/* Hardcoded so the sample email cannot be changed by a nefarious actor. */}
+        {(email !== "guest@guest.com") && updatePasswordComps()}
+        {(email === "guest@guest.com") && <Typography>This sample user cannot update their password. If you wish to check out this functionality, register a new user with a magic link, login with the magic link, then change the password.</Typography>}
         
         <Divider />
 

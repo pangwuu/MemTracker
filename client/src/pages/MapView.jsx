@@ -5,7 +5,7 @@ import Stack from "@mui/material/Stack";
 import MemoryMapEmbed from "../components/MemoryMapEmbed";
 import Container from "@mui/material/Container"
 import NewMemoryButton from "../components/NewMemoryLinkButton";
-import { Typography } from "@mui/material";
+import { Typography, Divider } from "@mui/material";
 
 
 export default function MapView({memories, mode}) {
@@ -36,8 +36,12 @@ export default function MapView({memories, mode}) {
             {!validPoints || validPoints.length == 0 && memories && memories.length > 0 && <Typography variant="h5">Loading...</Typography>}
             {(!validPoints || validPoints.length == 0) && (!memories || memories.length == 0) && <Typography variant="h5">No memories yet!</Typography>}
 
+            <Divider/>
+
             <NewMemoryButton/>
 
+            
+        
         </Stack>
 
     </Container>

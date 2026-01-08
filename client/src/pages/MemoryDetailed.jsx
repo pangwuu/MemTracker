@@ -2,7 +2,7 @@
  * A view where user's can see all photos and other details associated with a memory. Also allows users to delete the entire memory if needed.
  */
 import { useNavigate, useParams } from "react-router-dom";
-import { Typography, Container, ImageListItem, ImageList, Stack, Button, Box, Chip, Paper, CircularProgress} from "@mui/material";
+import { Typography, Container, ImageListItem, ImageList, Stack, Button, Box, Chip, Paper, CircularProgress, Divider} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
@@ -186,7 +186,7 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
                 {memory.location_plain_string == null && <Chip label={"No location provided"}/>}
             </Stack>
 
-            
+            <Divider/>
             
 
             {imageUrls && imageUrls.length >= 1 && 
@@ -235,14 +235,14 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
                 <Typography variant="h4">No photos of this memory!</Typography>
             )}
        
-
+            <Divider/>
             {memory.description !== null && <>
             <Typography variant="h5">The story</Typography>
             <Typography variant="body1">{memory.description}</Typography>
             </>}
             {memory.description == null && <Typography variant="h5">No description added</Typography>}
-
-
+            <Divider/>
+            
             {memory.location_lat && memory.location_long && <MapEmbed positions={
                 [
                 {
@@ -256,8 +256,9 @@ export default function MemoryDetailed({ session, memories, onMemoryDelete, mode
                     </MapEmbed>}
             
             {/* Only render this message if there is a location but it failed to render - otherwise just the first error message is enough */}
+            
             {memory.location_plain_string && (!memory.location_lat || !memory.location_long) == null && <Typography variant="h6">Failed to provide a map embed</Typography>}
-
+            <Divider/>
             <Box alignSelf={"center"}>
                 <Stack direction='row' spacing={3}>
                     <Paper variant="outlined">

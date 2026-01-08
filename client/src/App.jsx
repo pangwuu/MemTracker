@@ -101,7 +101,9 @@ function AppContent({ mode, setMode }) {
   }
 
   const handleRandomMemory = () => {
-    if (memories.length === 0) return;
+    if (memories.length === 0) {
+      alert('There are no memories! Try adding some then trying the random memory function again!')
+    };
     const randomIndex = Math.floor(Math.random() * memories.length);
     navigate(`/memoryDetailed/${memories[randomIndex].mem_id}`);
   };
@@ -148,15 +150,16 @@ function AppContent({ mode, setMode }) {
         </Toolbar>
       </AppBar>
 
-      <Routes>
-        <Route path='/account' element={<AccountView session={session} mode={mode} />} />
-        <Route path='/' element={<MemoryCardPage memories={memories} setMemories={setMemories} session={session} loadingMemories={loadingMemories} />} />
-        <Route path='/mapview' element={<MapView memories={memories} mode={mode} />} />
-        <Route path='/addMemory' element={<AddMemory session={session} onMemoryAdded={getMemories} mode={mode} />} />
-        <Route path='/editMemory/:memoryId' element={<AddMemory session={session} onMemoryAdded={getMemories} mode={mode} memories={memories} />} />
-        <Route path="/memoryDetailed/:memoryId" element={<MemoryDetailed session={session} memories={memories} onMemoryDelete={getMemories} mode={mode} />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+    <Routes>
+      <Route path='/account' element={<AccountView session={session} mode={mode} setMode={setMode} />} />
+      
+      <Route path='/' element={<MemoryCardPage memories={memories} setMemories={setMemories} session={session} loadingMemories={loadingMemories} />} />
+      <Route path='/mapview' element={<MapView memories={memories} mode={mode} />} />
+      <Route path='/addMemory' element={<AddMemory session={session} onMemoryAdded={getMemories} mode={mode} />} />
+      <Route path='/editMemory/:memoryId' element={<AddMemory session={session} onMemoryAdded={getMemories} mode={mode} memories={memories} />} />
+      <Route path="/memoryDetailed/:memoryId" element={<MemoryDetailed session={session} memories={memories} onMemoryDelete={getMemories} mode={mode} />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
     </>
   );
 }
