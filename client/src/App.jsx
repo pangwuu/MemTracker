@@ -44,14 +44,14 @@ export default function App() {
         <CssBaseline />
         {/* Only ONE BrowserRouter at the very top */}
         <BrowserRouter>
-          <AppContent mode={mode} theme={theme} />
+          <AppContent mode={mode} setMode={setMode} theme={theme} />
         </BrowserRouter>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
 }
 
-function AppContent({ mode, theme }) {
+function AppContent({ mode, setMode, theme }) {
   const navigate = useNavigate();
   const [currentView, setCurrentView] = useState(Views.User);
   const [session, setSession] = useState(null);
@@ -66,6 +66,10 @@ function AppContent({ mode, theme }) {
     });
     return () => subscription.unsubscribe();
   }, []);
+  
+  const handleToggle = () => {
+    setMode((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
 
   const getMemories = useCallback(async () => {
     if (!session) return;
@@ -137,9 +141,9 @@ function AppContent({ mode, theme }) {
               </ToggleButton>
             </ToggleButtonGroup>
 
-            <IconButton onClick={() => theme.palette.mode === 'light' ? setMode('dark') : setMode('light')} color="inherit">
-              {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
+          <IconButton onClick={handleToggle} color="inherit">
+            {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
           </Stack>
         </Toolbar>
       </AppBar>
