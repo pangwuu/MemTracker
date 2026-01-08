@@ -10,6 +10,7 @@
     "@mui/material": "^7.3.6",
     "@mui/x-date-pickers": "^8.21.0",
     "@supabase/supabase-js": "^2.86.2",
+    "browser-image-compression": "^2.0.2",
     "concurrently": "^9.2.1",
     "dayjs": "^1.11.19",
     "geolib": "^3.3.4",
