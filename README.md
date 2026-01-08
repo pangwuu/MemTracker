@@ -2,9 +2,17 @@
 
 [MemTracker](https://memories-ruby-nine.vercel.app/) is a personal memory tracking application that allows you to document and cherish your life's moments. Built with React and Supabase, it provides a beautiful interface to store memories with photos, detailed descriptions, dates, and precise locations.
 
+## Sample login
+Use these sample login credentials when prompted to login to see all the features of the app.
+
+Guest username: guest@guest.com
+
+Guest password: guest123
+
+
 ## Features
 
-- **Create Memories:** Add memories with custom titles, descriptions, dates, and locations.
+- **Create Memories:** Add and edit memories with custom titles, descriptions, dates, and locations.
 - **Location Integration:** Pinpoint exactly where a memory happened using OpenStreetMap integration. Features location autocomplete and interactive maps.
 - **Image Gallery:** Upload multiple photos for each memory and view them in a responsive gallery, on desktop or mobile.
 - **Interactive Map View:** See all your memories plotted on a global map.
