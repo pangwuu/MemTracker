@@ -66,7 +66,13 @@ export default function LoginPage() {
     <Stack spacing={2} alignItems="center" sx={{ maxWidth: 400, width: '100%' }}>
         <LockIcon className={styles.lockIcon}></LockIcon>
 
-        <Alert severity='info' sx={{textAlign: "center"}}>Log in to access your memories. If you don't have an account, or if you forgot your password, use an express login link to set up or reset your password.</Alert>
+        <Alert severity='info'>Log in to access your memories. If you don't have an account, or if you forgot your password, use an express login link to set up or reset your password.</Alert>
+        
+        <Alert>To preview the app's features, please use the following username and password: 
+        <Typography>Username: guest@guest.com</Typography>
+        <Typography>Password: 123456</Typography>
+        
+        </Alert>
 
         <Box component='form' onSubmit={handlePasswordLogin} justifyContent={'center'} width="100%">
             <Stack spacing={2} alignItems='center' width="100%">
