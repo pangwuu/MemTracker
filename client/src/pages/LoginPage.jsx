@@ -70,7 +70,7 @@ export default function LoginPage() {
         
         <Alert>To preview the app's features, please use the following username and password: 
         <Typography>Username: guest@guest.com</Typography>
-        <Typography>Password: 123456</Typography>
+        <Typography>Password: guest123</Typography>
         
         </Alert>
 
